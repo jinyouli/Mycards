@@ -89,6 +89,7 @@ function c77239233.initial_effect(c)
 	e10:SetTarget(c77239233.target1)
 	e10:SetOperation(c77239233.activate)
 	c:RegisterEffect(e10)   
+
 end
 ----------------------------------------------------------
 function c77239233.spcon(e,c)
