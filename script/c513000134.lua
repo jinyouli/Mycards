@@ -2,7 +2,7 @@
 --The Winged Dragon of Ra (VG)
 local s,id=GetID()
 function s.initial_effect(c)
-	
+
 	--summon with 3 tribute
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(10000010,2))
@@ -37,7 +37,7 @@ function s.initial_effect(c)
 
 	--to grave
 	local e6=Effect.CreateEffect(c)
-	e6:SetDescription(aux.Stringid(id,0))
+	e6:SetDescription(aux.Stringid(513000134,0))
 	e6:SetCategory(CATEGORY_TOGRAVE)
 	e6:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
 	e6:SetRange(LOCATION_MZONE)
@@ -67,7 +67,7 @@ function s.initial_effect(c)
 
 	--破坏
 	local e9=Effect.CreateEffect(c)
-    e9:SetDescription(aux.Stringid(513000134,1))
+    e9:SetDescription(aux.Stringid(77240070,1))
 	e9:SetCategory(CATEGORY_DESTROY)
 	e9:SetType(EFFECT_TYPE_IGNITION)
 	e9:SetRange(LOCATION_MZONE)
@@ -79,7 +79,7 @@ function s.initial_effect(c)
 
 	--pay atk/def
 	local e10=Effect.CreateEffect(c)
-	e10:SetDescription(aux.Stringid(513000134,2))
+	e10:SetDescription(aux.Stringid(77240070,0))
 	e10:SetCategory(CATEGORY_ATKCHANGE+CATEGORY_DEFCHANGE)
 	e10:SetType(EFFECT_TYPE_IGNITION)
 	e10:SetRange(LOCATION_MZONE)
@@ -89,7 +89,7 @@ function s.initial_effect(c)
 
 	--update atk
 	local e11=Effect.CreateEffect(c)
-	e10:SetDescription(aux.Stringid(513000134,0))
+	e11:SetDescription(aux.Stringid(77239233,1))
 	e11:SetCategory(CATEGORY_ATKCHANGE+CATEGORY_DEFCHANGE)
 	e11:SetType(EFFECT_TYPE_IGNITION)
 	e11:SetRange(LOCATION_MZONE)
