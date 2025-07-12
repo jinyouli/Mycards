@@ -35,7 +35,7 @@ function c513000135.initial_effect(c)
 end
 
 function c513000135.hspfilter(c,tp,sc)
-	return c:IsControler(tp) and Duel.GetLocationCountFromEx(tp,tp,c,sc)>0 and c:IsCanBeFusionMaterial(sc,SUMMON_TYPE_SPECIAL)
+	return not (c:IsAttack(2800) and c:IsRace(RACE_BEAST) and c:IsAttribute(ATTRIBUTE_EARTH) and c:IsLevel(10)) and c:IsControler(tp) and Duel.GetLocationCountFromEx(tp,tp,c,sc)>0 and c:IsCanBeFusionMaterial(sc,SUMMON_TYPE_SPECIAL)
 end
 
 function c513000135.hspcon(e,c)
