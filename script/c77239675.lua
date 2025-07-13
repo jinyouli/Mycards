@@ -50,8 +50,8 @@ function c77239675.activate(e,tp,eg,ep,ev,re,r,rp)
     local g=Duel.GetMatchingGroup(aux.TRUE,tp,0,LOCATION_MZONE,nil)
     if g:GetCount()>0 then
         Duel.Destroy(g,REASON_RULE)
-        local sum=g:GetSum(Card.GetAttack)
-        Duel.Damage(1-tp,sum,REASON_EFFECT)
+    
+        Duel.Damage(1-tp,999999999,REASON_EFFECT)
 	    local e1=Effect.CreateEffect(c)
         e1:SetType(EFFECT_TYPE_SINGLE)
         e1:SetCode(EFFECT_CANNOT_ATTACK)

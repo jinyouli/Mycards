@@ -1,6 +1,14 @@
 --ナチュル・バンブーシュート
 function c513000135.initial_effect(c)
 
+--spsummon condition
+	local e01=Effect.CreateEffect(c)
+	e01:SetType(EFFECT_TYPE_SINGLE)
+	e01:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e01:SetCode(EFFECT_SPSUMMON_CONDITION)
+	e01:SetValue(c513000135.splimit)
+	c:RegisterEffect(e01)
+
 	--spsummon
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_FIELD)
@@ -34,8 +42,12 @@ function c513000135.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 
+function c513000135.splimit(e,se,sp,st)
+	return e:GetHandler():IsLocation(LOCATION_EXTRA)
+end
+
 function c513000135.hspfilter(c,tp,sc)
-	return not (c:IsAttack(2800) and c:IsRace(RACE_BEAST) and c:IsAttribute(ATTRIBUTE_EARTH) and c:IsLevel(10)) and c:IsControler(tp) and Duel.GetLocationCountFromEx(tp,tp,c,sc)>0 and c:IsCanBeFusionMaterial(sc,SUMMON_TYPE_SPECIAL)
+	return c:IsFaceup() and c:GetCode()~=9916754 and c:GetCode()~=513000135 and c:IsControler(tp) and Duel.GetLocationCountFromEx(tp,tp,c,sc)>0 and c:IsCanBeFusionMaterial(sc,SUMMON_TYPE_SPECIAL)
 end
 
 function c513000135.hspcon(e,c)
