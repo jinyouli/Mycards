@@ -1,7 +1,7 @@
 --沉默的黑暗大法师lvmax
 function c77239949.initial_effect(c)
 	--xyz summon
-	Xyz.AddProcedure(c,nil,12,2)
+	aux.AddXyzProcedure(c,nil,12,2)
 	c:EnableReviveLimit()
 	
 	--special xyz_summon 
