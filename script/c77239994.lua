@@ -124,6 +124,14 @@ function c77239994.spop(e,tp,eg,ep,ev,re,r,rp)
 		e2:SetValue(c77239994.efilter1)
 		e2:SetReset(RESET_EVENT+0x1fe0000)
 		tc:RegisterEffect(e2)
+
+		local e3=Effect.CreateEffect(e:GetHandler())
+		e3:SetType(EFFECT_TYPE_SINGLE)
+		e3:SetCode(EFFECT_CANNOT_BE_BATTLE_TARGET)
+		e3:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+		e3:SetRange(LOCATION_MZONE)
+		e3:SetValue(aux.imval1)
+		tc:RegisterEffect(e3)
 		Duel.SpecialSummonComplete()
 	end
 end
