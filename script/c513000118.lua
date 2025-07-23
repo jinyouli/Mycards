@@ -185,7 +185,7 @@ function c513000118.spcon(e,tp,eg,ep,ev,re,r,rp)
 --and not e:GetHandler():IsStatus(STATUS_CHAINING)
 end
 function c513000118.spfilter(c,e,tp)
-	return c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsType(TYPE_MONSTER) and c:IsCanBeSpecialSummoned(e,0,tp,true,true)
 end
 function c513000118.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
@@ -199,7 +199,7 @@ function c513000118.spop(e,tp,eg,ep,ev,re,r,rp)
 		and Duel.IsExistingMatchingCard(c513000118.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local g1=Duel.SelectMatchingCard(tp,c513000118.spfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
-		Duel.SpecialSummonStep(g1:GetFirst(),0,tp,tp,false,false,POS_FACEUP)
+		Duel.SpecialSummonStep(g1:GetFirst(),0,tp,tp,true,true,POS_FACEUP)
 	end
 	if Duel.GetLocationCount(1-tp,LOCATION_MZONE)>0
 		and Duel.IsExistingMatchingCard(c513000118.spfilter,1-tp,LOCATION_GRAVE,0,1,nil,e,1-tp)
@@ -207,7 +207,7 @@ function c513000118.spop(e,tp,eg,ep,ev,re,r,rp)
 		and Duel.GetFlagEffect(1-tp,5130001180)==0 then
 		Duel.Hint(HINT_SELECTMSG,1-tp,HINTMSG_SPSUMMON)
 		local g2=Duel.SelectMatchingCard(1-tp,c513000118.spfilter,1-tp,LOCATION_GRAVE,0,1,1,nil,e,1-tp)
-		Duel.SpecialSummonStep(g2:GetFirst(),0,1-tp,1-tp,false,false,POS_FACEUP)
+		Duel.SpecialSummonStep(g2:GetFirst(),0,1-tp,1-tp,true,true,POS_FACEUP)
 		Duel.RegisterFlagEffect(1-tp,5130001180,RESET_PHASE+PHASE_END,0,1)
 	end
 	Duel.SpecialSummonComplete()
