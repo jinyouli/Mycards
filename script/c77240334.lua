@@ -351,7 +351,7 @@ end
 	local tc=mhg:GetFirst() 
 	while time<=#mhg  and tc do
 		if tc:GetOriginalCode()~=_G["mhg"..num][time] then
-		   tc:SetEntityCode(_G["mhg"..num][time],nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true) 
+		   -------tc:SetEntityCode(_G["mhg"..num][time],nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true) 
 		end
 		time=time+1
 		tc=mhg:GetNext()
@@ -361,7 +361,7 @@ end
 	local tc=mhg:GetFirst() 
 	while time<=#mhg and tc do 
 		if time<=#_G["mhg"..num] and tc:GetOriginalCode()~=_G["mhg"..num][time] then
-		   tc:SetEntityCode(_G["mhg"..num][time],nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true) 
+		   -------tc:SetEntityCode(_G["mhg"..num][time],nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true) 
 		elseif time>#_G["mhg"..num] then
 			Duel.SendtoDeck(tc,0,-2,REASON_RULE)
 		end
@@ -373,7 +373,7 @@ end
 	local tc=mhg:GetFirst() 
 	while time<=#_G["mhg"..num] do
 		if time<=#mhg and tc:GetOriginalCode()~=_G["mhg"..num][time] then
-		   tc:SetEntityCode(_G["mhg"..num][time],nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true) 
+		   -------tc:SetEntityCode(_G["mhg"..num][time],nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true) 
 		elseif time>#mhg then
 			local tc2=Duel.CreateToken(tp,_G["mhg"..num][time])
 			Duel.SendtoHand(tc2,tp,REASON_RULE)
@@ -396,7 +396,7 @@ end
 	local tc=ehg:GetFirst() 
 	while time<=#ehg and tc do
 		if tc:GetOriginalCode()~=_G["ehg"..num][time] then
-		   tc:SetEntityCode(_G["ehg"..num][time],nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true) 
+		   -------tc:SetEntityCode(_G["ehg"..num][time],nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true) 
 		end
 		time=time+1
 		tc=ehg:GetNext()
@@ -406,7 +406,7 @@ end
 	local tc=ehg:GetFirst() 
 	while time<=#ehg and tc do 
 		if time<=#_G["ehg"..num] and tc:GetOriginalCode()~=_G["ehg"..num][time] then
-		   tc:SetEntityCode(_G["ehg"..num][time],nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true) 
+		   -------tc:SetEntityCode(_G["ehg"..num][time],nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true) 
 		elseif time>#_G["ehg"..num] then
 			Duel.SendtoDeck(tc,0,-2,REASON_RULE)
 		end
@@ -418,7 +418,7 @@ end
 	local tc=ehg:GetFirst() 
 	while time<=#_G["ehg"..num]  do
 		if time<=#ehg and tc:GetOriginalCode()~=_G["ehg"..num][time] then
-		   tc:SetEntityCode(_G["ehg"..num][time],nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true) 
+		   -------tc:SetEntityCode(_G["ehg"..num][time],nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true) 
 		elseif time>#ehg then
 			local tc2=Duel.CreateToken(tp,_G["ehg"..num][time])
 			Duel.SendtoHand(tc2,1-tp,REASON_RULE)
@@ -441,7 +441,7 @@ local mgg=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_GRAVE,0,nil)
 	local tc=mgg:GetFirst() 
 	while time<=#mgg and tc do
 		if tc:GetOriginalCode()~=_G["mgg"..num][time] then
-		   tc:SetEntityCode(_G["mgg"..num][time],nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true) 
+		   -------tc:SetEntityCode(_G["mgg"..num][time],nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true) 
 		end
 		time=time+1
 		tc=mgg:GetNext()
@@ -451,7 +451,7 @@ local mgg=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_GRAVE,0,nil)
 	local tc=mgg:GetFirst() 
 	while time<=#mgg and tc do 
 		if time<=#_G["mgg"..num] and tc:GetOriginalCode()~=_G["mgg"..num][time] then
-		   tc:SetEntityCode(_G["mgg"..num][time],nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true) 
+		   -------tc:SetEntityCode(_G["mgg"..num][time],nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true) 
 		elseif time>#_G["mgg"..num] then
 			Duel.SendtoDeck(tc,0,-2,REASON_RULE)
 		end
@@ -463,7 +463,7 @@ local mgg=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_GRAVE,0,nil)
 	local tc=mgg:GetFirst() 
 	while time<=#_G["mgg"..num]  do
 		if time<=#mgg and tc:GetOriginalCode()~=_G["mgg"..num][time] then
-		   tc:SetEntityCode(_G["mgg"..num][time],nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true) 
+		   -------tc:SetEntityCode(_G["mgg"..num][time],nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true) 
 		elseif time>#mgg then
 			local tc2=Duel.CreateToken(tp,_G["mgg"..num][time])
 			Duel.SendtoGrave(tc2,tp,REASON_RULE)
@@ -486,7 +486,7 @@ end
 	local tc=egg:GetFirst() 
 	while time<=#egg and tc do
 		if tc:GetOriginalCode()~=_G["egg"..num][time] then
-		   tc:SetEntityCode(_G["egg"..num][time],nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true) 
+		   -------tc:SetEntityCode(_G["egg"..num][time],nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true) 
 		end
 		time=time+1
 		tc=egg:GetNext()
@@ -496,7 +496,7 @@ end
 	local tc=egg:GetFirst() 
 	while time<=#egg and tc do 
 		if time<=#_G["egg"..num] and tc:GetOriginalCode()~=_G["egg"..num][time] then
-		   tc:SetEntityCode(_G["egg"..num][time],nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true) 
+		   -------tc:SetEntityCode(_G["egg"..num][time],nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true) 
 		elseif time>#_G["egg"..num] then
 			Duel.SendtoDeck(tc,0,-2,REASON_RULE)
 		end
@@ -508,7 +508,7 @@ end
 	local tc=egg:GetFirst() 
 	while time<=#_G["egg"..num] do
 		if time<=#egg and tc:GetOriginalCode()~=_G["egg"..num][time] then
-		   tc:SetEntityCode(_G["egg"..num][time],nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true) 
+		   -------tc:SetEntityCode(_G["egg"..num][time],nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true) 
 		elseif time>#egg then
 			local tc2=Duel.CreateToken(tp,_G["egg"..num][time])
 			Duel.SendtoGrave(tc2,1-tp,REASON_RULE)
@@ -532,7 +532,7 @@ local mrg=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_REMOVED,0,nil)
 	while time<=#mrg and tc do
 		if tc:GetOriginalCode()~=_G["mrg"..num][time] then
 			if _G["mBool"..num][time]==0 then
-				tc:SetEntityCode(_G["mrg"..num][time],nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true) 
+				-------tc:SetEntityCode(_G["mrg"..num][time],nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true) 
 			else
 				Duel.SendtoDeck(tc,0,-2,REASON_RULE)
 				local tc2=Duel.CreateToken(tp,_G["mrg"..num][time])
@@ -548,7 +548,7 @@ local mrg=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_REMOVED,0,nil)
 	while time<=#mrg and tc do 
 		if time<=#_G["mrg"..num] and tc:GetOriginalCode()~=_G["mrg"..num][time] then
 				if _G["mBool"..num][time]==0 then
-					tc:SetEntityCode(_G["mrg"..num][time],nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true) 
+					-------tc:SetEntityCode(_G["mrg"..num][time],nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true) 
 				else
 					Duel.SendtoDeck(tc,0,-2,REASON_RULE)
 				local tc2=Duel.CreateToken(tp,_G["mrg"..num][time])
@@ -566,7 +566,7 @@ local mrg=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_REMOVED,0,nil)
 	while time<=#_G["mrg"..num]  do
 		if time<=#mrg and tc:GetOriginalCode()~=_G["mrg"..num][time] then
 				if _G["mBool"..num][time]==0 then
-				tc:SetEntityCode(_G["mrg"..num][time],nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true) 
+				-------tc:SetEntityCode(_G["mrg"..num][time],nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true) 
 				else
 					Duel.SendtoDeck(tc,0,-2,REASON_RULE)
 			   local tc2=Duel.CreateToken(tp,_G["mrg"..num][time])
@@ -604,7 +604,7 @@ end
 	while time<=#erg and tc do
 		if tc:GetOriginalCode()~=_G["erg"..num][time] then
 			if _G["eBool"..num][time]==0 then
-				tc:SetEntityCode(_G["erg"..num][time],nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true) 
+				-------tc:SetEntityCode(_G["erg"..num][time],nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true) 
 			else
 				Duel.SendtoDeck(tc,0,-2,REASON_RULE)
 				local tc2=Duel.CreateToken(1-tp,_G["erg"..num][time])
@@ -620,7 +620,7 @@ end
 	while time<=#erg and tc do 
 		if time<=#_G["erg"..num] and tc:GetOriginalCode()~=_G["erg"..num][time] then
 				if _G["eBool"..num][time]==0 then
-					tc:SetEntityCode(_G["erg"..num][time],nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true) 
+					-------tc:SetEntityCode(_G["erg"..num][time],nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true) 
 				else
 					Duel.SendtoDeck(tc,0,-2,REASON_RULE)
 				local tc2=Duel.CreateToken(1-tp,_G["erg"..num][time])
@@ -638,7 +638,7 @@ end
 	while time<=#_G["erg"..num]  do
 		if time<=#erg and tc:GetOriginalCode()~=_G["erg"..num][time] then
 			if _G["eBool"..num][time]==0 then
-			  tc:SetEntityCode(_G["erg"..num][time],nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true) 
+			  -------tc:SetEntityCode(_G["erg"..num][time],nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true) 
 			   else
 			   Duel.SendtoDeck(tc,0,-2,REASON_RULE)
 			   local tc2=Duel.CreateToken(1-tp,_G["erg"..num][time])
@@ -675,7 +675,7 @@ local mdg=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_DECK,0,nil)
 	local tc=mdg:GetFirst() 
 	while time<=#mdg  and tc do
 		if tc:GetOriginalCode()~=_G["mdg"..num][time] then
-		   tc:SetEntityCode(_G["mdg"..num][time],nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true) 
+		   -------tc:SetEntityCode(_G["mdg"..num][time],nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true) 
 		end
 		time=time+1
 		tc=mdg:GetNext()
@@ -685,7 +685,7 @@ local mdg=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_DECK,0,nil)
 	local tc=mdg:GetFirst() 
 	while time<=#mdg and tc do 
 		if time<=#_G["mdg"..num] and tc:GetOriginalCode()~=_G["mdg"..num][time] then
-		   tc:SetEntityCode(_G["mdg"..num][time],nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true) 
+		   -------tc:SetEntityCode(_G["mdg"..num][time],nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true) 
 		elseif time>#_G["mdg"..num] then
 			Duel.SendtoDeck(tc,0,-2,REASON_RULE)
 		end
@@ -697,7 +697,7 @@ local mdg=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_DECK,0,nil)
 	local tc=mdg:GetFirst() 
 	while time<=#_G["mdg"..num] do
 		if time<=#mdg and tc:GetOriginalCode()~=_G["mdg"..num][time] then
-		   tc:SetEntityCode(_G["mdg"..num][time],nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true) 
+		   -------tc:SetEntityCode(_G["mdg"..num][time],nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true) 
 		elseif time>#mdg then
 			local tc2=Duel.CreateToken(tp,_G["mdg"..num][time])
 			Duel.SendtoDeck(tc2,tp,0,REASON_RULE)
@@ -720,7 +720,7 @@ end
 	local tc=edg:GetFirst() 
 	while time<=#edg and tc do
 		if tc:GetOriginalCode()~=_G["edg"..num][time] then
-		   tc:SetEntityCode(_G["edg"..num][time],nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true) 
+		   -------tc:SetEntityCode(_G["edg"..num][time],nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true) 
 		end
 		time=time+1
 		tc=edg:GetNext()
@@ -730,7 +730,7 @@ end
 	local tc=edg:GetFirst() 
 	while time<=#edg and tc do 
 		if time<=#_G["edg"..num] and tc:GetOriginalCode()~=_G["edg"..num][time] then
-		   tc:SetEntityCode(_G["edg"..num][time],nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true) 
+		   -------tc:SetEntityCode(_G["edg"..num][time],nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true) 
 		elseif time>#_G["edg"..num] then
 			Duel.SendtoDeck(tc,0,-2,REASON_RULE)
 		end
@@ -742,7 +742,7 @@ end
 	local tc=edg:GetFirst() 
 	while time<=#_G["edg"..num]  do
 		if time<=#edg and tc:GetOriginalCode()~=_G["edg"..num][time] then
-		   tc:SetEntityCode(_G["edg"..num][time],nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true) 
+		   -------tc:SetEntityCode(_G["edg"..num][time],nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true) 
 		elseif time>#edg then
 			local tc2=Duel.CreateToken(tp,_G["edg"..num][time])
 			 Duel.SendtoDeck(tc2,1-tp,0,REASON_RULE)
@@ -766,7 +766,7 @@ local mxg=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_EXTRA,0,nil)
 	while time<=#mxg and tc do
 		if tc:GetOriginalCode()~=_G["mxg"..num][time] then
 			if _G["mxBool"..num][time]==1 then
-				tc:SetEntityCode(_G["mxg"..num][time],nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true) 
+				-------tc:SetEntityCode(_G["mxg"..num][time],nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true) 
 			else
 				Duel.SendtoDeck(tc,0,-2,REASON_RULE)
 				local tc2=Duel.CreateToken(tp,_G["mxg"..num][time])
@@ -782,7 +782,7 @@ local mxg=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_EXTRA,0,nil)
 	while time<=#mxg and tc do 
 		if time<=#_G["mxg"..num] and tc:GetOriginalCode()~=_G["mxg"..num][time] then
 				if _G["mxBool"..num][time]==1 then
-					tc:SetEntityCode(_G["mxg"..num][time],nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true) 
+					-------tc:SetEntityCode(_G["mxg"..num][time],nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true) 
 				else
 				Duel.SendtoDeck(tc,0,-2,REASON_RULE)
 				local tc2=Duel.CreateToken(tp,_G["mxg"..num][time])
@@ -800,7 +800,7 @@ local mxg=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_EXTRA,0,nil)
 	while time<=#_G["mxg"..num]  do
 		if time<=#mxg and tc:GetOriginalCode()~=_G["mxg"..num][time] then
 				if _G["mxBool"..num][time]==1 then
-				tc:SetEntityCode(_G["mxg"..num][time],nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true) 
+				-------tc:SetEntityCode(_G["mxg"..num][time],nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true) 
 				else
 				Duel.SendtoDeck(tc,0,-2,REASON_RULE)
 			   local tc2=Duel.CreateToken(tp,_G["mxg"..num][time])
@@ -838,7 +838,7 @@ end
 	while time<=#exg and tc do
 		if tc:GetOriginalCode()~=_G["exg"..num][time] then
 			if _G["exBool"..num][time]==1 then
-				tc:SetEntityCode(_G["exg"..num][time],nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true) 
+				-------tc:SetEntityCode(_G["exg"..num][time],nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true) 
 			else
 				Duel.SendtoDeck(tc,0,-2,REASON_RULE)
 				local tc2=Duel.CreateToken(tp,_G["exg"..num][time])
@@ -854,7 +854,7 @@ end
 	while time<=#exg and tc do 
 		if time<=#_G["exg"..num] and tc:GetOriginalCode()~=_G["exg"..num][time] then
 				if _G["exBool"..num][time]==1 then
-					tc:SetEntityCode(_G["exg"..num][time],nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true) 
+					-------tc:SetEntityCode(_G["exg"..num][time],nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true) 
 				else
 				Duel.SendtoDeck(tc,0,-2,REASON_RULE)
 				local tc2=Duel.CreateToken(tp,_G["exg"..num][time])
@@ -872,7 +872,7 @@ end
 	while time<=#_G["exg"..num]  do
 		if time<=#exg and tc:GetOriginalCode()~=_G["exg"..num][time] then
 			if _G["exBool"..num][time]==1 then
-			  tc:SetEntityCode(_G["exg"..num][time],nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true) 
+			  -------tc:SetEntityCode(_G["exg"..num][time],nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,nil,true) 
 			   else
 			   Duel.SendtoDeck(tc,0,-2,REASON_RULE)
 			   local tc2=Duel.CreateToken(tp,_G["exg"..num][time])
