@@ -29,7 +29,7 @@ function c111011002.initial_effect(c)
 	c:RegisterEffect(e3)		
 end
 function c111011002.filter(c,e,tp)
-	return c:IsSetCard(0x48) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsSetCard(0x48)
 end
 function c111011002.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(c111011002.filter,tp,0,LOCATION_EXTRA,1,nil,e,tp)
@@ -49,7 +49,8 @@ end
 function c111011002.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if not c:IsRelateToEffect(e) then return end
-		local xyzg=Duel.GetMatchingGroup(c111011002.filter,tp,0,LOCATION_EXTRA,nil,e,tp)
+		-- local xyzg=Duel.GetMatchingGroup(c111011002.filter,tp,0,LOCATION_EXTRA,nil,e,tp)
+		local xyzg=Duel.SelectMatchingCard(tp,c111011002.filter,tp,LOCATION_EXTRA,0,1,1,nil)
 		if xyzg:GetCount()>0 then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 			local xyz=xyzg:RandomSelect(tp,1):GetFirst()

@@ -35,12 +35,13 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.xyzfilter(c,e,tp)
 	return c:IsSetCard(0x48) and Duel.GetLocationCountFromEx(tp,tp,nil,c)>0
-		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,true,false)
 end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
 	local g=Duel.GetMatchingGroup(s.filter,tp,LOCATION_HAND,0,nil,e)
-	local sg=Duel.GetMatchingGroup(s.xyzfilter,tp,LOCATION_EXTRA,0,nil,e,tp)
+	-- local sg=Duel.GetMatchingGroup(s.xyzfilter,tp,LOCATION_EXTRA,0,nil,e,tp)
+	local sg=Duel.SelectMatchingCard(tp,s.xyzfilter,tp,LOCATION_EXTRA,0,1,1,nil)
+
 	if #sg>0 and g:IsExists(s.lvfilter,1,nil,g) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
 		local mg1=g:FilterSelect(tp,s.lvfilter,1,1,nil,g)
