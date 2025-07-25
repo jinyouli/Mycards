@@ -14,7 +14,7 @@ function c111011002.initial_effect(c)
 	e2:SetCountLimit(1)
 	e2:SetCondition(c111011002.condition)
 	e2:SetTarget(c111011002.target)
-	e2:SetCost(c111011002.cost)
+	-- e2:SetCost(c111011002.cost)
 	e2:SetOperation(c111011002.operation)
 	c:RegisterEffect(e2)
 	--XYZ
