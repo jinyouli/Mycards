@@ -37,6 +37,20 @@ function s.initial_effect(c)
 	e11:SetOperation(s.moperation2)
 	c:RegisterEffect(e11)
 	
+
+	--avoid battle damage
+	local e12=Effect.CreateEffect(c)
+	e12:SetType(EFFECT_TYPE_FIELD)
+	e12:SetCode(EFFECT_AVOID_BATTLE_DAMAGE)
+	e12:SetRange(LOCATION_SZONE)
+	e12:SetTargetRange(LOCATION_MZONE,0)
+	e12:SetTarget(s.target)
+	e12:SetValue(1)
+	c:RegisterEffect(e12)
+end
+
+function s.target(e,c)
+	return c:IsType(TYPE_TOON)
 end
 
 function s.filter3(c)
@@ -54,23 +68,12 @@ function s.moperation2(e,tp,eg,ep,ev,re,r,rp)
 	for tc in aux.Next(g) do
         if c:IsRelateToEffect(e) and tc:IsRelateToEffect(e) and not tc:IsImmuneToEffect(e) then
 
-            local e4=Effect.CreateEffect(tc)
-            e4:SetType(EFFECT_TYPE_SINGLE)
-            e4:SetProperty(EFFECT_FLAG_UNCOPYABLE)
-            e4:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
-            e4:SetValue(s.indes)
-			tc:RegisterEffect(e4,true)
-
-            local e5=e4:Clone()
-            e5:SetProperty(EFFECT_FLAG_UNCOPYABLE)
-            e5:SetCode(EFFECT_AVOID_BATTLE_DAMAGE)
-			tc:RegisterEffect(e5,true)
-
             local e6=Effect.CreateEffect(tc)
             e6:SetType(EFFECT_TYPE_SINGLE)
             e6:SetProperty(EFFECT_FLAG_UNCOPYABLE)
             e6:SetCondition(s.dircon)
             e6:SetCode(EFFECT_DIRECT_ATTACK)
+e6:SetReset(RESET_EVENT+RESETS_STANDARD)
 			tc:RegisterEffect(e6,true)
 
             local e7=Effect.CreateEffect(tc)
@@ -80,12 +83,14 @@ function s.moperation2(e,tp,eg,ep,ev,re,r,rp)
             e7:SetCode(EVENT_LEAVE_FIELD)
             e7:SetCondition(s.sdescon)
             e7:SetOperation(s.sdesop)
+e7:SetReset(RESET_EVENT+RESETS_STANDARD)
             tc:RegisterEffect(e7,true)
 
 			local e8=Effect.CreateEffect(tc)
 			e8:SetType(EFFECT_TYPE_SINGLE)
 			e8:SetCode(EFFECT_ADD_TYPE)
 			e8:SetValue(TYPE_TOON)
+e8:SetReset(RESET_EVENT+RESETS_STANDARD)
 			tc:RegisterEffect(e8,true)
 
         end
