@@ -58,7 +58,8 @@ function c77240036.activate(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,c77240036.filter,tp,LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE+LOCATION_REMOVED+LOCATION_EXTRA,0,1,1,nil,e,tp)
-	local tc=g:GetFirst()  
+	
+	-- local tr=Duel.GetFirstTarget()
 	if g:GetCount()>0 then
 		Duel.SpecialSummon(g,0,tp,tp,true,true,POS_FACEUP)
 		-- local e4=Effect.CreateEffect(e:GetHandler())
@@ -67,6 +68,14 @@ function c77240036.activate(e,tp,eg,ep,ev,re,r,rp)
 		-- e4:SetReset(RESET_EVENT+0xff0000)
 		-- e4:SetValue(c77240036.val)
 		-- tc:RegisterEffect(e4)
+
+		-- Debug.Message(tr:GetType())
+		local tc=g:GetFirst()  
+		if tc:IsType(TYPE_XYZ) then
+			local c=e:GetHandler()
+			c:CancelToGrave()
+			Duel.Overlay(tc,Group.FromCards(c))
+		end
 	end
 end
 function c77240036.val(e,c)
