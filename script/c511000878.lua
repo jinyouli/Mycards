@@ -11,9 +11,9 @@ function s.initial_effect(c)
 	e1:SetOperation(s.operation)
 	c:RegisterEffect(e1)
 end
-s.listed_names={CARD_DARK_MAGICIAN_GIRL,id+1}
+s.listed_names={38033121,id+1}
 function s.cfilter(c,ft)
-	return c:IsFaceup() and c:IsCode(CARD_DARK_MAGICIAN_GIRL) and c:IsAbleToHandAsCost() and (ft>1 or c:GetSequence()<5)
+	return c:IsFaceup() and c:IsCode(38033121) and c:IsAbleToHandAsCost() and (ft>1 or c:GetSequence()<5)
 end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:SetLabel(1)
@@ -55,7 +55,7 @@ function s.desfilter(c)
 	return c:IsFaceup() and c:IsCode(id+1)
 end
 function s.spfilter(c,e,tp)
-	return c:IsCode(CARD_DARK_MAGICIAN_GIRL) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsCode(38033121) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local sg=Duel.GetMatchingGroup(s.desfilter,tp,LOCATION_MZONE,0,nil)

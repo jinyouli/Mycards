@@ -3,6 +3,7 @@
 local s,id=GetID()
 function s.initial_effect(c)
 	-- aux.AddEquipProcedure(c)
+	aux.AddEquipSpellEffect(c,true,true,Card.IsFaceup,nil)
 	--cannot be destroyed
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_EQUIP)

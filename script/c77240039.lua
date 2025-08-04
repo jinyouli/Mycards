@@ -6,7 +6,7 @@ function c77240039.initial_effect(c)
     e1:SetCode(EFFECT_SPSUMMON_PROC)
     e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
     e1:SetRange(LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE+LOCATION_REMOVED)
-    e1:SetCondition(c77240039.spcon)
+    -- e1:SetCondition(c77240039.spcon)
     c:RegisterEffect(e1)
 
     --提升攻击
