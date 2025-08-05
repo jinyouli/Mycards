@@ -71,7 +71,7 @@ function c77240036.activate(e,tp,eg,ep,ev,re,r,rp)
 
 		-- Debug.Message(tr:GetType())
 		local tc=g:GetFirst()  
-		if tc:IsType(TYPE_XYZ) then
+		if tc:IsType(TYPE_XYZ) and not tc:IsCode(77239001) then
 			local c=e:GetHandler()
 			c:CancelToGrave()
 			Duel.Overlay(tc,Group.FromCards(c))
