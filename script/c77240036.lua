@@ -91,6 +91,6 @@ function c77240036.disop12(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c77240036.distg12(e,c)
-	return c:GetCardTargetCount()>0 and (re:GetHandler():IsSetCard(0xa50) or re:GetHandler():IsSetCard(0xa70))
+	return c:GetCardTargetCount()>0 and (e:GetHandler():IsSetCard(0xa50) or e:GetHandler():IsSetCard(0xa70))
 		and c:GetCardTarget():IsContains(e:GetHandler())
 end

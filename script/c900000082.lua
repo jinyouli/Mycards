@@ -50,6 +50,7 @@ function c900000082.spop(e,tp,eg,ep,ev,re,r,rp)
 			e1:SetCountLimit(1)		
 			e1:SetTarget(c900000082.rettg)
 			e1:SetOperation(c900000082.retop)
+			e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 			c:RegisterEffect(e1)
 		end	
 	end
