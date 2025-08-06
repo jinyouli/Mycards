@@ -5,7 +5,7 @@ function c77240036.initial_effect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
-	-- e1:SetCost(c77240036.cost)
+	e1:SetCost(c77240036.cost)
 	e1:SetTarget(c77240036.target)
 	e1:SetOperation(c77240036.activate)
 	c:RegisterEffect(e1)
@@ -51,31 +51,22 @@ function c77240036.filter(c,e,tp)
 end
 function c77240036.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(c77240036.filter,tp,LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE+LOCATION_REMOVED+LOCATION_EXTRA,0,1,nil,e,tp) end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE+LOCATION_REMOVED+LOCATION_EXTRA)
+		and Duel.IsExistingMatchingCard(c77240036.filter,tp,LOCATION_HAND,0,1,nil,e,tp) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND)
 end
 function c77240036.activate(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,c77240036.filter,tp,LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE+LOCATION_REMOVED+LOCATION_EXTRA,0,1,1,nil,e,tp)
-	
-	-- local tr=Duel.GetFirstTarget()
+	local g=Duel.SelectMatchingCard(tp,c77240036.filter,tp,LOCATION_HAND,0,1,1,nil,e,tp)
+	local tc=g:GetFirst()  
 	if g:GetCount()>0 then
 		Duel.SpecialSummon(g,0,tp,tp,true,true,POS_FACEUP)
-		-- local e4=Effect.CreateEffect(e:GetHandler())
-		-- e4:SetType(EFFECT_TYPE_SINGLE)
-		-- e4:SetCode(EFFECT_UPDATE_ATTACK)
-		-- e4:SetReset(RESET_EVENT+0xff0000)
-		-- e4:SetValue(c77240036.val)
-		-- tc:RegisterEffect(e4)
-
-		-- Debug.Message(tr:GetType())
-		local tc=g:GetFirst()  
-		if tc:IsType(TYPE_XYZ) and not tc:IsCode(77239001) then
-			local c=e:GetHandler()
-			c:CancelToGrave()
-			Duel.Overlay(tc,Group.FromCards(c))
-		end
+		local e4=Effect.CreateEffect(e:GetHandler())
+		e4:SetType(EFFECT_TYPE_SINGLE)
+		e4:SetCode(EFFECT_UPDATE_ATTACK)
+		e4:SetReset(RESET_EVENT+0xff0000)
+		e4:SetValue(c77240036.val)
+		tc:RegisterEffect(e4)
 	end
 end
 function c77240036.val(e,c)
@@ -100,6 +91,6 @@ function c77240036.disop12(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c77240036.distg12(e,c)
-	return c:GetCardTargetCount()>0 and (e:GetHandler():IsSetCard(0xa50) or e:GetHandler():IsSetCard(0xa70))
+	return c:GetCardTargetCount()>0 and (re:GetHandler():IsSetCard(0xa50) or re:GetHandler():IsSetCard(0xa70))
 		and c:GetCardTarget():IsContains(e:GetHandler())
 end
