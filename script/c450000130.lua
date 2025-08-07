@@ -35,7 +35,7 @@ function c450000130.check1(e,tp,eg,ep,ev,re,r,rp)
 			else
 				local flb1=sc:GetFlagEffectLabel(450000130)
 				local flb2=sc:GetFlagEffectLabel(450000130+100000000)
-				if flb1~=atk and flb2==0 and atk==0 then
+				if flb1~=atk then
 					sc:SetFlagEffectLabel(450000130,atk)
 					sc:SetFlagEffectLabel(450000130+100000000,1)
 				end
