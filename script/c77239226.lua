@@ -9,6 +9,7 @@ function c77239226.initial_effect(c)
 	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 	e2:SetRange(LOCATION_HAND+LOCATION_GRAVE)
 	e2:SetCondition(c77239226.spcon)
+    e2:SetCountLimit(1,77239226)
 	c:RegisterEffect(e2)
 end
 ------------------------------------------------------------------
