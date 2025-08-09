@@ -1,0 +1,157 @@
+--Infernity Zero (Anime)
+--scripted by Keddy
+function c513000124.initial_effect(c)
+	c:EnableReviveLimit()
+	--connot special summon
+	local e0=Effect.CreateEffect(c)
+	e0:SetType(EFFECT_TYPE_SINGLE)
+	e0:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e0:SetCode(EFFECT_SPSUMMON_CONDITION)
+	c:RegisterEffect(e0)
+	--Survive
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e1:SetCode(511002521)
+	e1:SetRange(LOCATION_HAND)
+	e1:SetCost(c513000124.spcost)
+	e1:SetTarget(c513000124.sptg)
+	e1:SetOperation(c513000124.spop)
+	c:RegisterEffect(e1)
+
+	--battle indestructable
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_SINGLE)
+	e3:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
+	e3:SetValue(1)
+	c:RegisterEffect(e3)
+	--counter
+	local e4=Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e4:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
+	e4:SetRange(LOCATION_MZONE)
+	e4:SetCode(EVENT_PRE_BATTLE_DAMAGE)
+	e4:SetCondition(c513000124.ctcon)
+	e4:SetOperation(c513000124.ctop)
+	c:RegisterEffect(e4)
+
+
+	local e01=Effect.CreateEffect(c)
+	e01:SetType(EFFECT_TYPE_FIELD)
+	e01:SetCode(EFFECT_CHANGE_DAMAGE)
+	e01:SetRange(LOCATION_MZONE)
+	e01:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e01:SetTargetRange(1,0)
+	e01:SetValue(c513000124.damval2)
+	c:RegisterEffect(e01)
+	local e02=e01:Clone()
+	e02:SetCode(EFFECT_NO_EFFECT_DAMAGE)
+	c:RegisterEffect(e02)
+
+	local e03=Effect.CreateEffect(c)
+	e03:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	e03:SetCode(EVENT_LEAVE_FIELD)
+	e03:SetRange(LOCATION_GRAVE)
+	e03:SetOperation(c513000124.leaveop)
+	e03:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
+	c:RegisterEffect(e03)
+
+
+	--self destroy
+	local e6=Effect.CreateEffect(c)
+	e6:SetType(EFFECT_TYPE_SINGLE)
+	e6:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e6:SetRange(LOCATION_MZONE)
+	e6:SetCode(EFFECT_SELF_DESTROY)
+	e6:SetCondition(c513000124.sdcon)
+	c:RegisterEffect(e6)
+	if not c513000124.global_check then
+		c513000124.global_check=true
+
+		local ge03=Effect.CreateEffect(c)
+		ge03:SetType(EFFECT_TYPE_FIELD)
+		ge03:SetCode(EFFECT_CHANGE_DAMAGE)
+		ge03:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+		ge03:SetTargetRange(1,0)
+		ge03:SetValue(c513000124.damval)
+		Duel.RegisterEffect(ge03,0)
+		local ge04=ge03:Clone()
+		ge04:SetCode(EFFECT_NO_EFFECT_DAMAGE)
+		Duel.RegisterEffect(ge04,0)
+
+		local ge05=Effect.CreateEffect(c)
+		ge05:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		ge05:SetCode(EVENT_ADJUST)
+		ge05:SetOperation(c513000124.op)
+		Duel.RegisterEffect(ge05,0)
+
+	end
+end
+
+
+function c513000124.leaveop(e,tp,eg,ep,ev,re,r,rp)
+	-- Duel.SetLP(tp,0)
+	local WIN_REASON_RELAY_SOUL=0x1a
+	Duel.Win(e:GetLabel(),WIN_REASON_RELAY_SOUL)
+end
+
+function c513000124.damval(e,re,val,r,rp,rc)
+	if Duel.GetLP(0)<=val and not c513000124.has_monster then
+		c513000124.has_monster=true
+		return Duel.GetLP(0)-1
+	end
+
+	return val
+end
+
+function c513000124.damval2(e,re,val,r,rp,rc)
+	if Duel.GetLP(0)<=val then
+		local ct=math.floor(val/500)
+		e:GetHandler():AddCounter(0x1097,ct)
+		return Duel.GetLP(0)-1
+	end
+
+	return val
+end
+
+function c513000124.op(e,tp,eg,ep,ev,re,r,rp)
+	if c513000124.has_monster then
+		Duel.RaiseEvent(Duel.GetMatchingGroup(nil,0,0xff,0,nil),511002521,e,0,0,0,0)
+		Duel.ResetFlagEffect(0,511002521)
+	end
+end
+function c513000124.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then
+		local g=Duel.GetFieldGroup(tp,LOCATION_HAND,0)
+		g:RemoveCard(e:GetHandler())
+		return g:GetCount()>0 and g:FilterCount(Card.IsDiscardable,nil)==g:GetCount()
+	end
+	local g=Duel.GetFieldGroup(tp,LOCATION_HAND,0)
+	g:RemoveCard(e:GetHandler())
+	Duel.SendtoGrave(g,REASON_COST+REASON_DISCARD)
+end
+function c513000124.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,true,false) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
+end
+function c513000124.spop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if not c:IsRelateToEffect(e) then return end
+	if Duel.SpecialSummon(c,0,tp,tp,true,false,POS_FACEUP)~=0 then
+		c:CompleteProcedure()
+	elseif Duel.GetLocationCount(tp,LOCATION_MZONE)<=0
+		and c:IsCanBeSpecialSummoned(e,0,tp,true,false) then
+		Duel.SendtoGrave(c,REASON_RULE)
+	end
+end
+function c513000124.ctcon(e,tp,eg,ep,ev,re,r,rp)
+	return ep==tp
+end
+function c513000124.ctop(e,tp,eg,ep,ev,re,r,rp)
+	local ct=math.floor(ev/500)
+	e:GetHandler():AddCounter(0x1097,ct)
+end
+function c513000124.sdcon(e)
+	return e:GetHandler():GetCounter(0x1097)>=3
+end
+
