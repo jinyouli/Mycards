@@ -45,7 +45,7 @@ function s.arcanareg(c,coin)
 	e0:SetCondition(s.descon)
 	e0:SetTarget(s.destg)
 	e0:SetOperation(s.desop)
-	e0:SetReset(RESET_EVENT+RESETS_STANDARD_DISABLE)
+	e0:SetReset(RESET_EVENT)
 	c:RegisterEffect(e0)
 	--coin effect if not used in Main Phase
 	local e1=e0:Clone()
@@ -77,7 +77,7 @@ function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		Duel.SetTargetPlayer(tp)
 		Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 		Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,tp,atk)
-		Duel.RegisterFlagEffect(tp,id,RESET_EVENT+RESETS_STANDARD_DISABLE+RESET_PHASE+PHASE_END+RESET_SELF_TURN,0,1)
+		Duel.RegisterFlagEffect(tp,id,RESET_EVENT+RESET_PHASE+PHASE_END+RESET_SELF_TURN,0,1)
 	else
 	--opponents
 		if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) end
@@ -89,7 +89,7 @@ function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		Duel.SetTargetPlayer(1-tp)
 		Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 		Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,atk)
-		Duel.RegisterFlagEffect(tp,id,RESET_EVENT+RESETS_STANDARD_DISABLE+RESET_PHASE+PHASE_END+RESET_SELF_TURN,0,1)
+		Duel.RegisterFlagEffect(tp,id,RESET_EVENT+RESET_PHASE+PHASE_END+RESET_SELF_TURN,0,1)
 	end
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
