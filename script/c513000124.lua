@@ -8,15 +8,6 @@ function c513000124.initial_effect(c)
 	e0:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 	e0:SetCode(EFFECT_SPSUMMON_CONDITION)
 	c:RegisterEffect(e0)
-	--Survive
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
-	e1:SetCode(511002521)
-	e1:SetRange(LOCATION_HAND)
-	e1:SetCost(c513000124.spcost)
-	e1:SetTarget(c513000124.sptg)
-	e1:SetOperation(c513000124.spop)
-	c:RegisterEffect(e1)
 
 	--battle indestructable
 	local e3=Effect.CreateEffect(c)
@@ -33,7 +24,6 @@ function c513000124.initial_effect(c)
 	e4:SetCondition(c513000124.ctcon)
 	e4:SetOperation(c513000124.ctop)
 	c:RegisterEffect(e4)
-
 
 	local e01=Effect.CreateEffect(c)
 	e01:SetType(EFFECT_TYPE_FIELD)
@@ -54,7 +44,6 @@ function c513000124.initial_effect(c)
 	e03:SetOperation(c513000124.leaveop)
 	e03:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
 	c:RegisterEffect(e03)
-
 
 	--self destroy
 	local e6=Effect.CreateEffect(c)
@@ -83,23 +72,19 @@ function c513000124.initial_effect(c)
 		ge05:SetCode(EVENT_ADJUST)
 		ge05:SetOperation(c513000124.op)
 		Duel.RegisterEffect(ge05,0)
-
 	end
 end
 
-
 function c513000124.leaveop(e,tp,eg,ep,ev,re,r,rp)
-	-- Duel.SetLP(tp,0)
 	local WIN_REASON_RELAY_SOUL=0x1a
 	Duel.Win(e:GetLabel(),WIN_REASON_RELAY_SOUL)
 end
 
 function c513000124.damval(e,re,val,r,rp,rc)
-	if Duel.GetLP(0)<=val and not c513000124.has_monster then
-		c513000124.has_monster=true
+	if Duel.GetLP(0)<=val and not c513000124.can_show and not c513000124.is_special then
+		c513000124.can_show=true
 		return Duel.GetLP(0)-1
 	end
-
 	return val
 end
 
@@ -109,41 +94,34 @@ function c513000124.damval2(e,re,val,r,rp,rc)
 		e:GetHandler():AddCounter(0x1097,ct)
 		return Duel.GetLP(0)-1
 	end
-
 	return val
 end
 
 function c513000124.op(e,tp,eg,ep,ev,re,r,rp)
-	if c513000124.has_monster then
-		Duel.RaiseEvent(Duel.GetMatchingGroup(nil,0,0xff,0,nil),511002521,e,0,0,0,0)
-		Duel.ResetFlagEffect(0,511002521)
+	
+	if c513000124.can_show then
+		c513000124.can_show=false
+
+		local op=aux.SelectFromOptions(tp,{true,aux.Stringid(513000124,0)},{true,aux.Stringid(513000124,1)})
+		if op==1 then
+			Duel.SetLP(tp,0)
+		end
+		if op==2 then
+			local g=Duel.GetFieldGroup(tp,LOCATION_HAND,0)
+			g:RemoveCard(e:GetHandler())
+			Duel.SendtoGrave(g,REASON_COST+REASON_DISCARD)
+			
+			local c=e:GetHandler()	
+			if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then
+				Duel.SendtoGrave(c,REASON_RULE)
+			else
+				Duel.SpecialSummon(c,0,tp,tp,true,true,POS_FACEUP)
+				c513000124.is_special=true
+			end
+		end
 	end
 end
-function c513000124.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then
-		local g=Duel.GetFieldGroup(tp,LOCATION_HAND,0)
-		g:RemoveCard(e:GetHandler())
-		return g:GetCount()>0 and g:FilterCount(Card.IsDiscardable,nil)==g:GetCount()
-	end
-	local g=Duel.GetFieldGroup(tp,LOCATION_HAND,0)
-	g:RemoveCard(e:GetHandler())
-	Duel.SendtoGrave(g,REASON_COST+REASON_DISCARD)
-end
-function c513000124.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,true,false) end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
-end
-function c513000124.spop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	if not c:IsRelateToEffect(e) then return end
-	if Duel.SpecialSummon(c,0,tp,tp,true,false,POS_FACEUP)~=0 then
-		c:CompleteProcedure()
-	elseif Duel.GetLocationCount(tp,LOCATION_MZONE)<=0
-		and c:IsCanBeSpecialSummoned(e,0,tp,true,false) then
-		Duel.SendtoGrave(c,REASON_RULE)
-	end
-end
+
 function c513000124.ctcon(e,tp,eg,ep,ev,re,r,rp)
 	return ep==tp
 end
