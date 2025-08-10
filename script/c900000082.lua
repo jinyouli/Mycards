@@ -37,7 +37,7 @@ function c900000082.spop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SpecialSummon(g,0,tp,tp,true,true,POS_FACEUP)
 
 		local tc=g:GetFirst()  
-		if tc:IsType(TYPE_XYZ) and not tc:IsCode(77239001) then
+		if tc:IsType(TYPE_XYZ) and not tc:IsType(TYPE_FUSION) then
 			local c=e:GetHandler()
 			c:CancelToGrave()
 			Duel.Overlay(tc,Group.FromCards(c))
