@@ -18,15 +18,17 @@ function s.filter(c)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
+	local ct=e:GetLabel()
 	Duel.SetTargetPlayer(1-tp)
-	Duel.SetTargetParam(800)
-	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,800)
+	Duel.SetTargetParam(ct*800)
+	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,ct*800)
 end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_SZONE,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local g=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_SZONE,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_SZONE,0,1,5,nil)
 	Duel.SendtoGrave(g,REASON_COST)
+	e:SetLabel(g:GetCount())
 end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
