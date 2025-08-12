@@ -102,11 +102,8 @@ function c513000124.op(e,tp,eg,ep,ev,re,r,rp)
 	if c513000124.can_show then
 		c513000124.can_show=false
 
-		local op=aux.SelectFromOptions(tp,{true,aux.Stringid(513000124,0)},{true,aux.Stringid(513000124,1)})
+		local op=aux.SelectFromOptions(tp,{true,aux.Stringid(77239255,4)},{true,aux.Stringid(77239255,5)})
 		if op==1 then
-			Duel.SetLP(tp,0)
-		end
-		if op==2 then
 			local g=Duel.GetFieldGroup(tp,LOCATION_HAND,0)
 			g:RemoveCard(e:GetHandler())
 			Duel.SendtoGrave(g,REASON_COST+REASON_DISCARD)
@@ -118,6 +115,9 @@ function c513000124.op(e,tp,eg,ep,ev,re,r,rp)
 				Duel.SpecialSummon(c,0,tp,tp,true,true,POS_FACEUP)
 				c513000124.is_special=true
 			end
+		end
+		if op==2 then
+			Duel.SetLP(tp,0)
 		end
 	end
 end
