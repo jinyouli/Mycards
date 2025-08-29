@@ -67,7 +67,7 @@ function c77240039.efilter11(e,te)
 	return te:GetHandler():IsSetCard(0xa60)
 end
 function c77240039.disop12(e,tp,eg,ep,ev,re,r,rp)
-	if (re:GetHandler():IsSetCard(0xa50) or re:GetHandler():IsSetCard(0xa70)) and re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then
+	if (e:GetHandler():IsSetCard(0xa50) or e:GetHandler():IsSetCard(0xa70)) and re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then
 		local g=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)
 		if g and g:IsContains(e:GetHandler()) then
 			if Duel.NegateEffect(ev) and re:GetHandler():IsRelateToEffect(re) then
