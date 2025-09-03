@@ -87,6 +87,9 @@ function c900000085.activate(e,tp,eg,ep,ev,re,r,rp)
 			Duel.SpecialSummonComplete()
 		end
 	end
+
+	Duel.SetLP(tp,_G["mhp"..num])
+	Duel.SetLP(1-tp,_G["ehp"..num])
 end
 function c900000085.fil(c)
 
@@ -131,5 +134,7 @@ function c900000085.chkop(e,tp,eg,ep,ev,re,r,rp)
 		tc:RegisterFlagEffect(900000085+turnCount*4,0,0,1,tc:GetSequence())
 		tc=g:GetNext()
 	end
+	_G["mhp"..turnCount]=Duel.GetLP(tp)
+    _G["ehp"..turnCount]=Duel.GetLP(1-tp)
 end
 
