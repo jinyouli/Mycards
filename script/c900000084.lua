@@ -17,6 +17,7 @@ function c900000084.initial_effect(c)
 		ge1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 		ge1:SetOperation(c900000084.chkop)
 		Duel.RegisterEffect(ge1,0)
+		
 		local ge2=ge1:Clone()
 		ge2:SetCondition(c900000084.con)
 		ge2:SetCode(EVENT_PHASE+PHASE_DRAW)
@@ -32,26 +33,26 @@ function c900000084.activate(e,tp,eg,ep,ev,re,r,rp)
 	if g:GetCount()>0 then
 		local tc=g:GetFirst()
 		while tc do
-			loc=tc:GetFlagEffectLabel(511004003-3)
+			loc=tc:GetFlagEffectLabel(900000084-3)
 			if loc==1 then
-				Duel.SendtoDeck(tc,tc:GetFlagEffectLabel(511004003-1),2,REASON_EFFECT)
+				Duel.SendtoDeck(tc,tc:GetFlagEffectLabel(900000084-1),2,REASON_EFFECT)
 			elseif loc==2 then
-				Duel.SendtoHand(tc,tc:GetFlagEffectLabel(511004003-1),REASON_EFFECT)
+				Duel.SendtoHand(tc,tc:GetFlagEffectLabel(900000084-1),REASON_EFFECT)
 			elseif loc==4 or loc==8 then
-				if not Duel.MoveToField(tc,tp,tc:GetFlagEffectLabel(511004003-1),loc,tc:GetFlagEffectLabel(511004003-2),true) then
-					Duel.ChangePosition(tc,tc:GetFlagEffectLabel(511004003-2))
+				if not Duel.MoveToField(tc,tp,tc:GetFlagEffectLabel(900000084-1),loc,tc:GetFlagEffectLabel(900000084-2),true) then
+					Duel.ChangePosition(tc,tc:GetFlagEffectLabel(900000084-2))
 				end
 			elseif loc==10 then
 				Duel.SendtoGrave(tc,REASON_EFFECT)
 			elseif loc==20 then
-				Duel.Remove(tc,tc:GetFlagEffectLabel(511004003-2),REASON_EFFECT)
+				Duel.Remove(tc,tc:GetFlagEffectLabel(900000084-2),REASON_EFFECT)
 			elseif loc==64 then
-				Duel.SendtoDeck(tc,tc:GetFlagEffectLabel(511004003-1),2,REASON_EFFECT)
+				Duel.SendtoDeck(tc,tc:GetFlagEffectLabel(900000084-1),2,REASON_EFFECT)
 			elseif loc==100 then
-				Duel.SendtoExtraP(tc,tc:GetFlagEffectLabel(511004003-1),REASON_EFFECT)
+				Duel.SendtoExtraP(tc,tc:GetFlagEffectLabel(900000084-1),REASON_EFFECT)
 			end
-			if tc:GetSequence()~=tc:GetFlagEffectLabel(511004003) then
-					Duel.MoveSequence(tc,tc:GetFlagEffectLabel(511004003))
+			if tc:GetSequence()~=tc:GetFlagEffectLabel(900000084) then
+					Duel.MoveSequence(tc,tc:GetFlagEffectLabel(900000084))
 				end
 			tc=g:GetNext()
 		end
@@ -70,9 +71,9 @@ function c900000084.activate(e,tp,eg,ep,ev,re,r,rp)
 		if g:GetCount()>0 then
 			local tc1=g:GetFirst()
 			while tc1 do
-				Duel.SpecialSummonStep(tc1,0,tc1:GetFlagEffectLabel(511004003-1),tc1:GetFlagEffectLabel(511004003-1),true,true,tc1:GetFlagEffectLabel(511004003-2))
-				if tc1:GetSequence()~=tc1:GetFlagEffectLabel(511004003) then
-					Duel.MoveSequence(tc1,tc1:GetFlagEffectLabel(511004003))
+				Duel.SpecialSummonStep(tc1,0,tc1:GetFlagEffectLabel(900000084-1),tc1:GetFlagEffectLabel(900000084-1),true,true,tc1:GetFlagEffectLabel(900000084-2))
+				if tc1:GetSequence()~=tc1:GetFlagEffectLabel(900000084) then
+					Duel.MoveSequence(tc1,tc1:GetFlagEffectLabel(900000084))
 				end
 				tc1=g:GetNext()
 			end
@@ -81,39 +82,39 @@ function c900000084.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c900000084.fil(c)
-	return (c:GetFlagEffectLabel(511004003-3)==LOCATION_MZONE and not c:IsLocation(LOCATION_MZONE)) or 
-	(c:GetFlagEffectLabel(511004003-3)==LOCATION_HAND and not c:IsLocation(LOCATION_HAND)) or 
-	(c:GetFlagEffectLabel(511004003-3)==LOCATION_DECK and not c:IsLocation(LOCATION_DECK)) or 
-	(c:GetFlagEffectLabel(511004003-3)==LOCATION_GRAVE and not c:IsLocation(LOCATION_GRAVE)) or 
-	(c:GetFlagEffectLabel(511004003-3)==LOCATION_REMOVED and not c:IsLocation(LOCATION_REMOVED)) or 
-	(c:GetFlagEffectLabel(511004003-3)==LOCATION_EXTRA and not c:IsLocation(LOCATION_EXTRA))
+	return (c:GetFlagEffectLabel(900000084-3)==LOCATION_MZONE and not c:IsLocation(LOCATION_MZONE)) or 
+	(c:GetFlagEffectLabel(900000084-3)==LOCATION_HAND and not c:IsLocation(LOCATION_HAND)) or 
+	(c:GetFlagEffectLabel(900000084-3)==LOCATION_DECK and not c:IsLocation(LOCATION_DECK)) or 
+	(c:GetFlagEffectLabel(900000084-3)==LOCATION_GRAVE and not c:IsLocation(LOCATION_GRAVE)) or 
+	(c:GetFlagEffectLabel(900000084-3)==LOCATION_REMOVED and not c:IsLocation(LOCATION_REMOVED)) or 
+	(c:GetFlagEffectLabel(900000084-3)==LOCATION_EXTRA and not c:IsLocation(LOCATION_EXTRA))
 	or 
-	(c:GetFlagEffectLabel(511004003-3)==LOCATION_FZONE and not c:IsLocation(LOCATION_FZONE))
+	(c:GetFlagEffectLabel(900000084-3)==LOCATION_FZONE and not c:IsLocation(LOCATION_FZONE))
 	or 
-	(c:GetFlagEffectLabel(511004003-3)==LOCATION_SZONE and not c:IsLocation(LOCATION_SZONE))
+	(c:GetFlagEffectLabel(900000084-3)==LOCATION_SZONE and not c:IsLocation(LOCATION_SZONE))
 end
 function c900000084.fil2(c)
-	return c:GetFlagEffectLabel(511004003-3)~=c:GetLocation() or c:GetFlagEffectLabel(511004003-2)~=c:GetPosition() or c:GetFlagEffectLabel(511004003-1)~=c:GetControler()
+	return c:GetFlagEffectLabel(900000084-3)~=c:GetLocation() or c:GetFlagEffectLabel(900000084-2)~=c:GetPosition() or c:GetFlagEffectLabel(900000084-1)~=c:GetControler()
 end
 function c900000084.fil3(c,seq)
-	return c:GetFlagEffectLabel(511004003)~=seq
+	return c:GetFlagEffectLabel(900000084)~=seq
 end
 function c900000084.chkop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(nil,tp,0xff,0xff,nil)
 	local tc=g:GetFirst()
 	while tc do
-		tc:ResetFlagEffect(511004003-3)
-		tc:ResetFlagEffect(511004003-2)
-		tc:ResetFlagEffect(511004003-1)
-		tc:ResetFlagEffect(511004003)
+		tc:ResetFlagEffect(900000084-3)
+		tc:ResetFlagEffect(900000084-2)
+		tc:ResetFlagEffect(900000084-1)
+		tc:ResetFlagEffect(900000084)
 		if tc:IsLocation(LOCATION_EXTRA) and tc:IsFaceup() and tc:IsType(TYPE_PENDULUM) then
-			tc:RegisterFlagEffect(511004003-3,0,0,1,100)
+			tc:RegisterFlagEffect(900000084-3,0,0,1,100)
 		else
-			tc:RegisterFlagEffect(511004003-3,0,0,1,tc:GetLocation())
+			tc:RegisterFlagEffect(900000084-3,0,0,1,tc:GetLocation())
 		end
-		tc:RegisterFlagEffect(511004003-2,0,0,1,tc:GetPosition())
-		tc:RegisterFlagEffect(511004003-1,0,0,1,tc:GetControler())
-		tc:RegisterFlagEffect(511004003,0,0,1,tc:GetSequence())
+		tc:RegisterFlagEffect(900000084-2,0,0,1,tc:GetPosition())
+		tc:RegisterFlagEffect(900000084-1,0,0,1,tc:GetControler())
+		tc:RegisterFlagEffect(900000084,0,0,1,tc:GetSequence())
 		tc=g:GetNext()
 	end
 end
