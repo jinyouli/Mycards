@@ -1,4 +1,4 @@
---时
+--逆时的时针
 function c900000085.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
