@@ -18,10 +18,6 @@ function c900000084.initial_effect(c)
 		ge1:SetOperation(c900000084.chkop)
 		Duel.RegisterEffect(ge1,0)
 		
-		local ge2=ge1:Clone()
-		ge2:SetCondition(c900000084.con)
-		ge2:SetCode(EVENT_PHASE+PHASE_DRAW)
-		Duel.RegisterEffect(ge2,0)
 	end
 end
 function c900000084.target(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -118,6 +114,4 @@ function c900000084.chkop(e,tp,eg,ep,ev,re,r,rp)
 		tc=g:GetNext()
 	end
 end
-function c900000084.con(e,tp,eg,ep,ev,re,r,rp,chk)
-	return Duel.GetTurnCount()==1
-end
+
