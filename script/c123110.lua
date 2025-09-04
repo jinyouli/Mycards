@@ -34,7 +34,15 @@ function c123110.activate(e,tp,eg,ep,ev,re,r,rp)
 				Duel.SendtoDeck(tc,tc:GetFlagEffectLabel(123110-1),2,REASON_EFFECT)
 			elseif loc==2 then
 				Duel.SendtoHand(tc,tc:GetFlagEffectLabel(123110-1),REASON_EFFECT)
-			elseif loc==4 or loc==8 then
+			elseif loc==8 then
+				if tc:IsType(TYPE_FIELD) then
+				    Duel.MoveToField(tc,tp,tc:GetFlagEffectLabel(123110-1),LOCATION_FZONE,tc:GetFlagEffectLabel(123110-2),true)
+				else
+					if not Duel.MoveToField(tc,tp,tc:GetFlagEffectLabel(123110-1),loc,tc:GetFlagEffectLabel(123110-2),true) then
+						Duel.ChangePosition(tc,tc:GetFlagEffectLabel(123110-2))
+					end
+				end
+			elseif loc==4 then
 				if not Duel.MoveToField(tc,tp,tc:GetFlagEffectLabel(123110-1),loc,tc:GetFlagEffectLabel(123110-2),true) then
 					Duel.ChangePosition(tc,tc:GetFlagEffectLabel(123110-2))
 				end

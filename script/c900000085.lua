@@ -45,7 +45,15 @@ function c900000085.activate(e,tp,eg,ep,ev,re,r,rp)
 				Duel.SendtoDeck(tc,tc:GetFlagEffectLabel(900000085-1+num*4),2,REASON_EFFECT)
 			elseif loc==2 then
 				Duel.SendtoHand(tc,tc:GetFlagEffectLabel(900000085-1+num*4),REASON_EFFECT)
-			elseif loc==4 or loc==8 then
+			elseif loc==8 then
+				if tc:IsType(TYPE_FIELD) then
+				    Duel.MoveToField(tc,tp,tc:GetFlagEffectLabel(900000085-1+num*4),LOCATION_FZONE,tc:GetFlagEffectLabel(900000085-2+num*4),true)
+				else
+					if not Duel.MoveToField(tc,tp,tc:GetFlagEffectLabel(900000085-1+num*4),loc,tc:GetFlagEffectLabel(900000085-2+num*4),true) then
+						Duel.ChangePosition(tc,tc:GetFlagEffectLabel(900000085-2+num*4))
+					end
+				end
+			elseif loc==4 then
 				if not Duel.MoveToField(tc,tp,tc:GetFlagEffectLabel(900000085-1+num*4),loc,tc:GetFlagEffectLabel(900000085-2+num*4),true) then
 					Duel.ChangePosition(tc,tc:GetFlagEffectLabel(900000085-2+num*4))
 				end
