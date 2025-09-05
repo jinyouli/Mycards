@@ -5,9 +5,11 @@ function c900000085.initial_effect(c)
 	e1:SetCategory(CATEGORY_DESTROY)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetCondition(c900000085.condition)
 	e1:SetTarget(c900000085.target)
 	e1:SetOperation(c900000085.activate)
 	c:RegisterEffect(e1)
+
 	if not c900000085.global_check then
 		c900000085.global_check=true
 		local ge1=Effect.CreateEffect(c)
@@ -17,9 +19,13 @@ function c900000085.initial_effect(c)
 		ge1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 		ge1:SetOperation(c900000085.chkop)
 		Duel.RegisterEffect(ge1,0)
-		
 	end
 end
+
+function c900000085.condition(c)
+	return Duel.GetTurnCount()>=2
+end
+
 function c900000085.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return Duel.IsExistingMatchingCard(c900000085.fil2,tp,LOCATION_MZONE+LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE+LOCATION_REMOVED+LOCATION_EXTRA,LOCATION_MZONE+LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE+LOCATION_REMOVED+LOCATION_EXTRA+LOCATION_FZONE+LOCATION_SZONE,1,nil) or Duel.IsExistingMatchingCard(c900000085.fil,tp,0xff,0xff,1,nil) end
