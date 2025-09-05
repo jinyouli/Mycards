@@ -34,6 +34,7 @@ function c77238410.spcon(e,c)
         and Duel.IsExistingMatchingCard(c77238410.spfilter,c:GetControler(),LOCATION_GRAVE+LOCATION_ONFIELD,0,1,nil,77238295)
         and Duel.IsExistingMatchingCard(c77238410.spfilter,c:GetControler(),LOCATION_GRAVE+LOCATION_ONFIELD,0,1,nil,77238296)
         and Duel.IsExistingMatchingCard(c77238410.spfilter,c:GetControler(),LOCATION_GRAVE+LOCATION_ONFIELD,0,1,nil,77238297)
+        and Duel.IsExistingMatchingCard(c77238410.spfilter,c:GetControler(),LOCATION_GRAVE+LOCATION_ONFIELD,0,1,nil,900000086)
 end
 ---------------------------------------------------------------------
 function c77238410.target(e,tp,eg,ep,ev,re,r,rp,chk)
