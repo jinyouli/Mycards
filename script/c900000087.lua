@@ -15,12 +15,13 @@ function c900000087.filter(c,e,tp,m)
 end
 
 function c900000087.matfilter(c)
-	return c:IsLocation(LOCATION_DECK) and c:IsLocation(LOCATION_HAND) and c:IsLocation(LOCATION_MZONE)
+	return c:IsLocation(LOCATION_DECK) or c:IsLocation(LOCATION_HAND) or c:IsLocation(LOCATION_MZONE)
 end
 function c900000087.target(e,tp,eg,ep,ev,re,r,rp,chk)
+	
 	if chk==0 then
 		local mg=Duel.GetRitualMaterial(tp):Filter(c900000087.matfilter,nil)
-		return Duel.IsExistingMatchingCard(aux.RitualUltimateFilter,tp,LOCATION_DECK+LOCATION_HAND,0,1,nil,nil,e,tp,mg,nil,Card.GetLevel,"Greater")
+		return Duel.IsExistingMatchingCard(c900000087.filter,tp,LOCATION_DECK+LOCATION_HAND,0,1,nil,nil,e,tp,mg,nil,Card.GetLevel,"Greater")
 	end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK+LOCATION_HAND)
 end
@@ -28,7 +29,7 @@ function c900000087.activate(e,tp,eg,ep,ev,re,r,rp)
 	::cancel::
 	local mg=Duel.GetMatchingGroup(c900000087.matfilter,tp,LOCATION_DECK+LOCATION_HAND+LOCATION_MZONE,0,nil)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,aux.RitualUltimateFilter,tp,LOCATION_DECK,0,1,1,nil,nil,e,tp,mg,nil,Card.GetLevel,"Greater")
+	local g=Duel.SelectMatchingCard(tp,c900000087.filter,tp,LOCATION_DECK+LOCATION_HAND,0,1,1,nil,nil,e,tp,mg,nil,Card.GetLevel,"Greater")
 	local tc=g:GetFirst()
 	if tc then
 		mg=mg:Filter(Card.IsCanBeRitualMaterial,tc,tc)
@@ -45,9 +46,7 @@ function c900000087.activate(e,tp,eg,ep,ev,re,r,rp)
 		tc:SetMaterial(mat)
 		Duel.ReleaseRitualMaterial(mat)
 		Duel.BreakEffect()
-		if Duel.SpecialSummonStep(tc,SUMMON_TYPE_RITUAL,tp,tp,false,true,POS_FACEUP) then
-			tc:CompleteProcedure()
-		end
-		Duel.SpecialSummonComplete()
+		Duel.SpecialSummon(tc,SUMMON_TYPE_RITUAL,tp,tp,false,true,POS_FACEUP)
+		tc:CompleteProcedure()
 	end
 end

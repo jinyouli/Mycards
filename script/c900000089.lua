@@ -17,15 +17,16 @@ function c900000089.initial_effect(c)
 	--dice
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(76895648,0))
-	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
-	e4:SetCategory(CATEGORY_DICE+CATEGORY_ATKCHANGE+CATEGORY_DRAW)
-	e4:SetCode(EVENT_PHASE+PHASE_STANDBY)
-	e4:SetRange(LOCATION_SZONE)
+	e4:SetType(EFFECT_TYPE_IGNITION)
+	e4:SetCategory(CATEGORY_DICE)
+	e4:SetRange(LOCATION_MZONE)
 	e4:SetCountLimit(1)
 	e4:SetCondition(c900000089.condition)
 	e4:SetTarget(c900000089.target)
 	e4:SetOperation(c900000089.operation)
 	c:RegisterEffect(e4)
+
+
 end
 
 function c900000089.condition(e,tp,eg,ep,ev,re,r,rp)
