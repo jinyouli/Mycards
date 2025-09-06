@@ -1,6 +1,26 @@
 --完全體黑暗大邪神·索克
 function c900000089.initial_effect(c)
 
+	--cannot special summon
+	local e01=Effect.CreateEffect(c)
+	e01:SetType(EFFECT_TYPE_SINGLE)
+	e01:SetCode(EFFECT_SPSUMMON_CONDITION)
+	e01:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	c:RegisterEffect(e01)
+	--summon
+	local e02=Effect.CreateEffect(c)
+	e02:SetType(EFFECT_TYPE_SINGLE)
+	e02:SetCode(EFFECT_CANNOT_DISABLE_SPSUMMON)
+	e02:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	c:RegisterEffect(e02)
+
+	--double attack
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetCode(EFFECT_EXTRA_ATTACK)
+	e1:SetValue(1)
+	c:RegisterEffect(e1)
+
 	--unaffectable
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE)
@@ -38,6 +58,10 @@ function c900000089.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_DICE,nil,0,tp,1)
 end
 
+function c900000089.cfilter1(c,tp)
+	return c:IsType(TYPE_MONSTER)
+end
+
 function c900000089.operation(e,tp,eg,ep,ev,re,r,rp)
 	local dice=Duel.TossDice(tp,1)
 	if dice==1 then
@@ -53,7 +77,7 @@ function c900000089.operation(e,tp,eg,ep,ev,re,r,rp)
 		local sg=Duel.GetMatchingGroup(aux.TRUE,tp,0,LOCATION_HAND,nil)
 		Duel.Destroy(sg,REASON_EFFECT)
 	elseif dice==5 then
-		local sg=Duel.GetMatchingGroup(aux.TRUE,tp,0,LOCATION_MZONE,nil)
+		local sg=Duel.GetMatchingGroup(c900000089.cfilter1,tp,0,LOCATION_HAND,nil)
 		Duel.Destroy(sg,REASON_EFFECT)
 	elseif dice==6 then
 		local sg=Duel.GetMatchingGroup(aux.TRUE,tp,0,LOCATION_ONFIELD,nil)

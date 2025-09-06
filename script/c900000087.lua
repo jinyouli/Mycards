@@ -29,7 +29,7 @@ function c900000087.activate(e,tp,eg,ep,ev,re,r,rp)
 	::cancel::
 	local mg=Duel.GetMatchingGroup(c900000087.matfilter,tp,LOCATION_DECK+LOCATION_HAND+LOCATION_MZONE,0,nil)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,c900000087.filter,tp,LOCATION_DECK+LOCATION_HAND,0,1,1,nil,nil,e,tp,mg,nil,Card.GetLevel,"Greater")
+	local g=Duel.SelectMatchingCard(tp,c900000087.filter,tp,LOCATION_DECK+LOCATION_HAND+LOCATION_GRAVE,0,1,1,nil,nil,e,tp,mg,nil,Card.GetLevel,"Greater")
 	local tc=g:GetFirst()
 	if tc then
 		mg=mg:Filter(Card.IsCanBeRitualMaterial,tc,tc)
