@@ -78,10 +78,6 @@ function c900000086.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 
-function c900000086.filter(c,code)
-    return c:IsCode(code) and (c:IsLocation(LOCATION_GRAVE) or c:IsLocation(LOCATION_HAND) or c:IsFaceup())
-end
-
 function c900000086.thfilter1(c,e,tp)
 	return c:IsCode(77238291)
 end

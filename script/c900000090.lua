@@ -13,15 +13,36 @@ end
 
 function c900000090.spcon(e,tp,eg,ep,ev,re,r,rp)
 
-	return Duel.IsExistingMatchingCard(c900000086.thfilter1,tp,LOCATION_GRAVE+LOCATION_DECK+LOCATION_HAND,0,1,nil)
-	and Duel.IsExistingMatchingCard(c900000086.thfilter2,tp,LOCATION_GRAVE+LOCATION_DECK+LOCATION_HAND,0,1,nil)
-	and Duel.IsExistingMatchingCard(c900000086.thfilter3,tp,LOCATION_GRAVE+LOCATION_DECK+LOCATION_HAND,0,1,nil)
-    and Duel.IsExistingMatchingCard(c900000086.thfilter4,tp,LOCATION_GRAVE+LOCATION_DECK+LOCATION_HAND,0,1,nil)
-	and Duel.IsExistingMatchingCard(c900000086.thfilter5,tp,LOCATION_GRAVE+LOCATION_DECK+LOCATION_HAND,0,1,nil)
-	and Duel.IsExistingMatchingCard(c900000086.thfilter6,tp,LOCATION_GRAVE+LOCATION_DECK+LOCATION_HAND,0,1,nil)
-	and Duel.IsExistingMatchingCard(c900000086.thfilter7,tp,LOCATION_GRAVE+LOCATION_DECK+LOCATION_HAND,0,1,nil)
+	return Duel.IsExistingMatchingCard(c900000090.thfilter1,tp,LOCATION_GRAVE+LOCATION_DECK+LOCATION_HAND,0,1,nil)
+	and Duel.IsExistingMatchingCard(c900000090.thfilter2,tp,LOCATION_GRAVE+LOCATION_DECK+LOCATION_HAND,0,1,nil)
+	and Duel.IsExistingMatchingCard(c900000090.thfilter3,tp,LOCATION_GRAVE+LOCATION_DECK+LOCATION_HAND,0,1,nil)
+    and Duel.IsExistingMatchingCard(c900000090.thfilter4,tp,LOCATION_GRAVE+LOCATION_DECK+LOCATION_HAND,0,1,nil)
+	and Duel.IsExistingMatchingCard(c900000090.thfilter5,tp,LOCATION_GRAVE+LOCATION_DECK+LOCATION_HAND,0,1,nil)
+	and Duel.IsExistingMatchingCard(c900000090.thfilter6,tp,LOCATION_GRAVE+LOCATION_DECK+LOCATION_HAND,0,1,nil)
+	and Duel.IsExistingMatchingCard(c900000090.thfilter7,tp,LOCATION_GRAVE+LOCATION_DECK+LOCATION_HAND,0,1,nil)
 end
 
+function c900000090.thfilter1(c,e,tp)
+	return c:IsCode(77238291)
+end
+function c900000090.thfilter2(c,e,tp)
+	return c:IsCode(77238292)
+end
+function c900000090.thfilter3(c,e,tp)
+	return c:IsCode(77238293)
+end
+function c900000090.thfilter4(c,e,tp)
+	return c:IsCode(77238294)
+end
+function c900000090.thfilter5(c,e,tp)
+	return c:IsCode(77238295)
+end
+function c900000090.thfilter6(c,e,tp)
+	return c:IsCode(77238296)
+end
+function c900000090.thfilter7(c,e,tp)
+	return c:IsCode(77238297)
+end
 
 function c900000090.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
@@ -37,7 +58,7 @@ function c900000090.activate(e,tp,eg,ep,ev,re,r,rp)
 
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 
-	local mg=Duel.GetMatchingGroup(c900000086.rmfilter,tp,LOCATION_GRAVE+LOCATION_DECK+LOCATION_HAND,LOCATION_GRAVE+LOCATION_DECK+LOCATION_HAND,nil)
+	local mg=Duel.GetMatchingGroup(c900000090.rmfilter,tp,LOCATION_GRAVE+LOCATION_DECK+LOCATION_HAND,LOCATION_GRAVE+LOCATION_DECK+LOCATION_HAND,nil)
 
 	local t1=0
 	local t2=0
