@@ -29,6 +29,7 @@ function c900000092.initial_effect(c)
 
 	--copy spell
 	local e5=Effect.CreateEffect(c)
+	e5:SetDescription(aux.Stringid(77238410,3))
 	e5:SetType(EFFECT_TYPE_IGNITION)
 	e5:SetCode(EVENT_FREE_CHAIN)
 	e5:SetRange(LOCATION_MZONE)
@@ -38,12 +39,13 @@ function c900000092.initial_effect(c)
 	e5:SetOperation(c900000092.operation)
 	c:RegisterEffect(e5)
 
-	--special summon
+
+	--spsummon
 	local e6=Effect.CreateEffect(c)
-	e6:SetDescription(aux.Stringid(900000092,0))
+	e6:SetDescription(aux.Stringid(77238410,2))
+	e6:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e6:SetType(EFFECT_TYPE_IGNITION)
 	e6:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e6:SetCode(EVENT_FREE_CHAIN)
 	e6:SetRange(LOCATION_MZONE)
 	e6:SetCountLimit(1)
 	e6:SetTarget(c900000092.sptg)
@@ -52,7 +54,7 @@ function c900000092.initial_effect(c)
 
 	--destroy spell
 	local e7=Effect.CreateEffect(c)
-	e7:SetDescription(aux.Stringid(900000092,0))
+	e7:SetDescription(aux.Stringid(77238410,0))
 	e7:SetCategory(CATEGORY_DESTROY)
 	e7:SetType(EFFECT_TYPE_IGNITION)
 	e7:SetProperty(EFFECT_FLAG_CARD_TARGET)
@@ -65,9 +67,56 @@ function c900000092.initial_effect(c)
 	local e8=Effect.CreateEffect(c)
 	e8:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
 	e8:SetCode(EVENT_LEAVE_FIELD)
+	e8:SetRange(LOCATION_GRAVE)
 	e8:SetOperation(c900000092.leaveop)
 	e8:SetReset(RESET_EVENT+RESET_TURN_SET+RESET_TOFIELD+RESET_OVERLAY)
 	c:RegisterEffect(e8)
+end
+
+function c900000092.spfilter(c,e,tp)
+	return c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+end
+
+function c900000092.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(1-tp) and c900000092.spfilter(chkc,e,tp) end
+	if chk==0 then return Duel.GetFieldGroupCount(tp,LOCATION_HAND,0)>0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and Duel.IsExistingTarget(c900000092.spfilter,tp,0,LOCATION_GRAVE,1,nil,e,tp) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local g=Duel.SelectTarget(tp,c900000092.spfilter,tp,0,LOCATION_GRAVE,1,1,nil,e,tp)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_HANDES,nil,0,tp,1)
+end
+function c900000092.spop(e,tp,eg,ep,ev,re,r,rp)
+
+	local tc=Duel.GetFirstTarget()
+	if tc:IsRelateToEffect(e) then
+		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
+	end
+end
+
+function c900000092.filter1(c,e,tp,eg,ep,ev,re,r,rp)
+	local te=c:CheckActivateEffect(false,false,false)
+	if c:IsType(TYPE_SPELL) and te then
+		if c:IsSetCard(0x95) then
+			local tg=te:GetTarget()
+			return not tg or tg(e,tp,eg,ep,ev,re,r,rp,0)
+		else
+			return true
+		end
+	end
+	return false
+end
+function c900000092.filter2(c,e,tp,eg,ep,ev,re,r,rp)
+	local te=c:CheckActivateEffect(false,false,false)
+	if c:IsType(TYPE_SPELL) and not c:IsType(TYPE_EQUIP+TYPE_CONTINUOUS) and te then
+		if c:IsSetCard(0x95) then
+			local tg=te:GetTarget()
+			return not tg or tg(e,tp,eg,ep,ev,re,r,rp,0)
+		else
+			return true
+		end
+	end
+	return false
 end
 
 function c900000092.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
@@ -134,21 +183,6 @@ function c900000092.operation(e,tp,eg,ep,ev,re,r,rp)
 	while etc do
 		etc:ReleaseEffectRelation(te)
 		etc=g:GetNext()
-	end
-end
-
-function c900000092.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(1-tp) and c900000092.filter(chkc,e,tp) end
-	if chk==0 then return e:GetHandler():IsRelateToEffect(e) and e:GetHandler():IsFaceup() end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectTarget(tp,c900000092.filter2,tp,0,LOCATION_GRAVE,1,1,nil,e,tp)
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
-end
-function c900000092.spop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
-	local tc=Duel.GetFirstTarget()
-	if tc and tc:IsRelateToEffect(e) and Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)~=0 then
-		
 	end
 end
 
