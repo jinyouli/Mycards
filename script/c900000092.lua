@@ -69,7 +69,7 @@ function c900000092.initial_effect(c)
 	e8:SetCode(EVENT_LEAVE_FIELD)
 	e8:SetRange(LOCATION_GRAVE)
 	e8:SetOperation(c900000092.leaveop)
-	e8:SetReset(RESET_EVENT+RESET_TURN_SET+RESET_TOFIELD+RESET_OVERLAY)
+	e8:SetReset(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
 	c:RegisterEffect(e8)
 end
 
