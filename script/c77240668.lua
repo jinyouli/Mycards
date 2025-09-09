@@ -20,16 +20,15 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.IsPlayerAffectedByEffect(tp,59822133) then return end
-	local c=e:GetHandler()
-	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
-	if ft<1 then return end
-	
-	if ft>1 and Duel.IsPlayerCanSpecialSummonMonster(tp,77240669,0,TYPES_TOKEN_MONSTER,0,0,1,RACE_ZOMBIE,ATTRIBUTE_EARTH,POS_FACEUP_DEFENSE)  then
-		for i=1,ft do
-			local token=Duel.CreateToken(tp,77240669)
-			Duel.SpecialSummonStep(token,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
-		end
-		Duel.SpecialSummonComplete()
-	end
+
+	local ft=5
+	if Duel.IsPlayerAffectedByEffect(tp,59822133) then ft=1 end
+	ft=math.min(ft,(Duel.GetLocationCount(tp,LOCATION_MZONE)))
+	if ft<=0 or not Duel.IsPlayerCanSpecialSummonMonster(tp,77240669,0,TYPES_TOKEN_MONSTER,0,0,1,RACE_ZOMBIE,ATTRIBUTE_EARTH) then return end
+	repeat
+		local token=Duel.CreateToken(tp,77240669)
+		Duel.SpecialSummonStep(token,0,tp,tp,false,false,POS_FACEUP)
+		ft=ft-1
+	until ft<=0 or not Duel.SelectYesNo(tp,aux.Stringid(67284107,1))
+	Duel.SpecialSummonComplete()
 end
