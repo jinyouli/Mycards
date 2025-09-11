@@ -1,3 +1,4 @@
+--卡通世界(Anime)
 local s, id = GetID()
 function s.initial_effect(c)
 
@@ -92,6 +93,15 @@ function s.moperation2(e,tp,eg,ep,ev,re,r,rp)
 			e8:SetValue(TYPE_TOON)
             e8:SetReset(RESET_EVENT+RESETS_STANDARD)
 			tc:RegisterEffect(e8,true)
+
+			-- 名字卡通化
+			local e9 = Effect.CreateEffect(tc)
+			e9:SetType(EFFECT_TYPE_SINGLE)
+			e9:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+			e9:SetCode(EFFECT_CHANGE_CODE)
+			e9:SetValue(123111)
+			e9:SetReset(RESET_EVENT+RESETS_STANDARD)
+			tc:RegisterEffect(e9,true)
 
         end
     end

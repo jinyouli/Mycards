@@ -12,7 +12,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetCurrentPhase()==PHASE_MAIN1 or Duel.GetCurrentPhase()==PHASE_MAIN2
+	return Duel.GetCurrentPhase()==PHASE_MAIN1 or Duel.GetCurrentPhase()==PHASE_MAIN2 or (Duel.GetCurrentPhase()>=PHASE_BATTLE_START and Duel.GetCurrentPhase()<=PHASE_BATTLE)
 end
 
 function s.filter(c)
@@ -44,7 +44,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		e01:SetType(EFFECT_TYPE_SINGLE)
 		e01:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 		e01:SetCode(EFFECT_CHANGE_CODE)
-		e01:SetValue(123111)
+		e01:SetValue(code)
 		e01:SetReset(RESET_EVENT+RESETS_STANDARD)
 		c:RegisterEffect(e01)
 		
@@ -68,6 +68,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 
 	if (tpe&TYPE_FIELD)~=0 then
+
 		local of=Duel.GetFieldCard(1-tp,LOCATION_FZONE,0)
 		if of then Duel.Destroy(of,REASON_RULE) end
 		of=Duel.GetFieldCard(tp,LOCATION_FZONE,0)
