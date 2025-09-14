@@ -29,12 +29,12 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=re:GetHandler()
 	local c=e:GetHandler()
 	local tpe=tc:GetType()
+
+	-- 获取目标卡的原始代码
+	local code = tc:GetOriginalCode()
 	
 	if tc:IsType(TYPE_CONTINUOUS) then
         c:CancelToGrave()
-		-- 获取目标卡的原始代码
-		local code = tc:GetOriginalCode()
-		
 		-- 复制永续魔法的效果
 		c:CopyEffect(code, RESET_EVENT+RESETS_STANDARD, 1)
 		
@@ -46,15 +46,15 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		e01:SetValue(code)
 		e01:SetReset(RESET_EVENT+RESETS_STANDARD)
 		c:RegisterEffect(e01)
+
+        Duel.SendtoGrave(tc,REASON_RULE)
     
     elseif tc:IsType(TYPE_EQUIP) then
         
         c:CancelToGrave()
         -- 清空当前卡的所有效果
         c:ResetEffect(RESET_CARD, RESET_EVENT)
-        
-        -- 复制目标装备卡的效果
-        local code=tc:GetOriginalCode()
+        -- 复制效果
         c:CopyEffect(code, RESET_EVENT+RESETS_STANDARD, 1)
 
         -- 修改卡名
@@ -73,9 +73,11 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
         
         -- 装备到选择的怪兽
         if not Duel.Equip(tp, c, ec) then return end
+
+        Duel.SendtoGrave(tc,REASON_RULE)
 		
 	else
-        -- 通常魔法
+        -- 通常魔法/场地魔法
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_CHANGE_TYPE)
@@ -98,6 +100,23 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		if of then Duel.Destroy(of,REASON_RULE) end
 		of=Duel.GetFieldCard(tp,LOCATION_FZONE,0)
 		if of and Duel.Destroy(of,REASON_RULE)==0 then Duel.SendtoGrave(tc,REASON_RULE) end
-		Duel.MoveToField(tc, 1-tp, tp, LOCATION_FZONE, POS_FACEUP, true)
+
+		local token = Duel.CreateToken(tp, 900000094)
+		if not token then return end
+
+		-- 将Token放置到场地魔法区域（LOCATION_FZONE）
+		if Duel.MoveToField(token, tp, tp, LOCATION_FZONE, POS_FACEUP, true) then
+			token:CopyEffect(code,RESET_EVENT+RESETS_STANDARD-RESET_TURN_SET,1)
+
+			-- 修改卡名
+			local e01 = Effect.CreateEffect(token)
+			e01:SetType(EFFECT_TYPE_SINGLE)
+			e01:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+			e01:SetCode(EFFECT_CHANGE_CODE)
+			e01:SetValue(code)
+			e01:SetReset(RESET_EVENT+RESETS_STANDARD)
+			token:RegisterEffect(e01)
+		end
+
 	end
 end
