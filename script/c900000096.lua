@@ -169,7 +169,7 @@ end
 
 -- 效果4：天界王特召筛选
 function s.spfilter(c, e, tp)
-    return c:IsCode(00000000) and c:IsCanBeSpecialSummoned(e, 0, tp, true, false) -- 替换00000000为天界王 志那都的实际卡号
+    return c:IsCode(900000097) and c:IsCanBeSpecialSummoned(e, 0, tp, true, false) -- 替换900000097为天界王 志那都的实际卡号
 end
 
 -- 效果4：特召天界王操作
