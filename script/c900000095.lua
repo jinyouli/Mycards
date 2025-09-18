@@ -38,37 +38,38 @@ end
 
 
 function s.diceop(e, tp, eg, ep, ev, re, r, rp)
-
-if Duel.GetFlagEffect(tp,id)~=0 then return end
+    if Duel.GetFlagEffect(tp,id)~=0 then return end
 
     s.previous_results = {}
     local original_result = Duel.GetDiceResult()
     Debug.Message("初始 : " .. original_result)
 
 	if Duel.SelectYesNo(tp,aux.Stringid(39454112,0)) then
-    
-   Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
-
- table.insert(s.previous_results, original_result)
+        Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
+        table.insert(s.previous_results, original_result)
 
         local new_dice_result = s.reroll_dice(original_result)
         Debug.Message("变化值: " .. new_dice_result)
         Duel.SetDiceResult(new_dice_result)
-	end
+    end
 end
 
 
 function s.coinop(e, tp, eg, ep, ev, re, r, rp)
-
-if Duel.GetFlagEffect(tp,id)~=0 then return end
+    if Duel.GetFlagEffect(tp,id)~=0 then return end
 
     s.previous_results = {}
     local original_result = Duel.GetCoinResult()
-    Debug.Message("初始 : " .. original_result)
+
+    if original_result == 0 then
+        -- 正面是 1，反面是 0
+        Debug.Message("初始 : " .. "反面")
+    else
+        Debug.Message("初始 : " .. "正面")
+    end
 
 	if Duel.SelectYesNo(tp,aux.Stringid(39454112,0)) then
-
-Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
+        Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
         table.insert(s.previous_results, original_result)
 
         local new_coin_result = s.reroll_coin(original_result)

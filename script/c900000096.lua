@@ -1,15 +1,12 @@
 -- 奇迹的方舟
--- 原始动画效果参考[2,3](@ref)，OCG版为仪式魔法[2](@ref)
--- 本实现按用户要求改为永续魔法卡并调整效果
 
 local s, id = GetID()
-
 function s.initial_effect(c)
     --Activate
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_ACTIVATE)
-	e1:SetCode(EVENT_FREE_CHAIN)
-	c:RegisterEffect(e1)
+	local e0=Effect.CreateEffect(c)
+	e0:SetType(EFFECT_TYPE_ACTIVATE)
+	e0:SetCode(EVENT_FREE_CHAIN)
+	c:RegisterEffect(e0)
     
     -- 效果1：墓地效果无效化
     local e1 = Effect.CreateEffect(c)
@@ -19,15 +16,7 @@ function s.initial_effect(c)
     e1:SetTargetRange(LOCATION_GRAVE, LOCATION_GRAVE)
     e1:SetTarget(s.distarget)
     c:RegisterEffect(e1)
-    
-    -- 效果1补充：墓地怪兽不受其他卡影响
-    local e2 = Effect.CreateEffect(c)
-    e2:SetType(EFFECT_TYPE_FIELD)
-    e2:SetCode(EFFECT_IMMUNE_EFFECT)
-    e2:SetRange(LOCATION_SZONE)
-    e2:SetTargetRange(LOCATION_GRAVE, LOCATION_GRAVE)
-    e2:SetValue(s.efilter)
-    c:RegisterEffect(e2)
+
     
     -- 效果2：1回合1次，双方墓地全除外并回复LP
     local e3 = Effect.CreateEffect(c)
@@ -48,6 +37,7 @@ function s.initial_effect(c)
     e4:SetCode(EVENT_PHASE + PHASE_BATTLE_START)
     e4:SetRange(LOCATION_SZONE)
     e4:SetCondition(s.spcon)
+    e4:SetCountLimit(1)
     e4:SetTarget(s.sptg)
     e4:SetOperation(s.spop)
     c:RegisterEffect(e4)
@@ -59,10 +49,40 @@ function s.initial_effect(c)
     e5:SetType(EFFECT_TYPE_SINGLE + EFFECT_TYPE_TRIGGER_O)
     e5:SetCode(EVENT_DESTROYED)
     e5:SetProperty(EFFECT_FLAG_DELAY)
-    e5:SetCondition(s.spcon2)
     e5:SetTarget(s.sptg2)
     e5:SetOperation(s.spop2)
     c:RegisterEffect(e5)
+
+	--necro valley
+	local e6=Effect.CreateEffect(c)
+	e6:SetType(EFFECT_TYPE_FIELD)
+	e6:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
+	e6:SetCode(EFFECT_NECRO_VALLEY)
+	e6:SetRange(LOCATION_SZONE)
+	e6:SetTargetRange(LOCATION_GRAVE,0)
+	c:RegisterEffect(e6)
+	local e7=e6:Clone()
+	e7:SetTargetRange(0,LOCATION_GRAVE)
+	c:RegisterEffect(e7)
+	local e8=Effect.CreateEffect(c)
+	e8:SetType(EFFECT_TYPE_FIELD)
+	e8:SetCode(EFFECT_NECRO_VALLEY)
+	e8:SetRange(LOCATION_SZONE)
+	e8:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e8:SetTargetRange(1,0)
+	c:RegisterEffect(e8)
+	local e9=e8:Clone()
+	e9:SetTargetRange(0,1)
+	c:RegisterEffect(e9)
+
+	--disable
+	local e10=Effect.CreateEffect(c)
+	e10:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e10:SetCode(EVENT_CHAIN_SOLVING)
+	e10:SetRange(LOCATION_SZONE)
+	e10:SetOperation(s.disop)
+	c:RegisterEffect(e10)
+
 end
 
 -- 效果1辅助函数：只无效墓地发动的效果
@@ -70,10 +90,6 @@ function s.distarget(e, c)
     return c:IsType(TYPE_MONSTER) and c:IsLocation(LOCATION_GRAVE)
 end
 
--- 效果1辅助函数：免疫其他卡的影响
-function s.efilter(e, te)
-    return te:GetOwner() ~= e:GetOwner()
-end
 
 -- 效果2：除外双方墓地所有怪兽并回复LP
 function s.rmtg(e, tp, eg, ep, ev, re, r, rp, chk)
@@ -122,16 +138,23 @@ function s.spop(e, tp, eg, ep, ev, re, r, rp)
     if not e:GetHandler():IsRelateToEffect(e) then return end
     
     local op = Duel.GetTurnPlayer()
+    
     local count = Duel.GetMatchingGroupCount(Card.IsFaceup, op, LOCATION_MZONE, 0, nil)
     
     if count <= 0 then return end
     
+    
     -- 获取双方墓地怪兽
-    local g1 = Duel.GetMatchingGroup(Card.IsCanBeSpecialSummoned, tp, LOCATION_GRAVE, 0, nil, POS_FACEUP_DEFENSE)
-    local g2 = Duel.GetMatchingGroup(Card.IsCanBeSpecialSummoned, 1 - tp, LOCATION_GRAVE, 0, nil, POS_FACEUP_DEFENSE)
+    local g1 = Duel.GetMatchingGroup(function(c) return c:IsCanBeSpecialSummoned(e, SUMMON_TYPE_SPECIAL, tp, false, false) end, tp, LOCATION_GRAVE, 0, nil)
+
+
+
+    local g2 = Duel.GetMatchingGroup(function(c) return c:IsCanBeSpecialSummoned(e, SUMMON_TYPE_SPECIAL, 1-tp, false, false) end, 1-tp, LOCATION_GRAVE, 0, nil)
+
     local g = Group.CreateGroup()
     g:Merge(g1)
     g:Merge(g2)
+    
     
     if #g == 0 then return end
     
@@ -143,19 +166,16 @@ function s.spop(e, tp, eg, ep, ev, re, r, rp)
         g:Sub(rg)
     end
     
+   
     -- 特殊召唤
     if #sg > 0 then
         local tc = sg:GetFirst()
         while tc do
-            Duel.SpecialSummon(tc, 0, tc:GetOwner(), tc:GetOwner(), false, false, POS_FACEUP_DEFENSE)
+      
+            Duel.SpecialSummon(tc, 0, tp, tp, false, false, POS_FACEUP_DEFENSE)
             tc = sg:GetNext()
         end
     end
-end
-
--- 效果4：被破坏时特召天界王的条件
-function s.spcon2(e, tp, eg, ep, ev, re, r, rp)
-    return rp == 1 - tp and e:GetHandler():IsPreviousControler(tp)
 end
 
 -- 效果4：特召天界王的目标设置
@@ -181,3 +201,35 @@ function s.spop2(e, tp, eg, ep, ev, re, r, rp)
         Duel.SpecialSummon(g, 0, tp, tp, true, false, POS_FACEUP)
     end
 end
+
+function s.disfilter(c,re)
+	return c:IsRelateToEffect(re)
+end
+
+function s.discheck(ev,category,re)
+	local ex,tg,ct,p,v=Duel.GetOperationInfo(ev,category)
+	if not ex then return false end
+
+	if v==LOCATION_GRAVE then
+		return true
+	end
+
+    if tg and tg:GetCount()>0 then
+		return tg:IsExists(s.disfilter,1,nil,re)
+	end
+	return false
+end
+function s.disop(e,tp,eg,ep,ev,re,r,rp)
+	local tc=re:GetHandler()
+	if not Duel.IsChainDisablable(ev) then return end
+	local res=false
+
+	if not res and s.discheck(ev,CATEGORY_SPECIAL_SUMMON,re) then res=true end
+	if not res and s.discheck(ev,CATEGORY_TOHAND,re) then res=true end
+	if not res and s.discheck(ev,CATEGORY_TODECK,re) then res=true end
+	if not res and s.discheck(ev,CATEGORY_TOEXTRA,re) then res=true end
+	if not res and s.discheck(ev,CATEGORY_LEAVE_GRAVE,re) then res=true end
+	if not res and s.discheck(ev,CATEGORY_REMOVE,re) then res=true end
+	if res then Duel.NegateEffect(ev,true) end
+end
+
