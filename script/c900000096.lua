@@ -102,11 +102,15 @@ function s.rmtg(e, tp, eg, ep, ev, re, r, rp, chk)
     Duel.SetOperationInfo(0, CATEGORY_RECOVER, nil, 0, tp, 0)
 end
 
+function s.filter(c,tp,eg,ep,ev,re,r,rp)
+    return c:IsAbleToRemove() and c:IsType(TYPE_MONSTER) 
+end
+
 function s.rmop(e, tp, eg, ep, ev, re, r, rp)
     if not e:GetHandler():IsRelateToEffect(e) then return end
     
-    local g1 = Duel.GetMatchingGroup(Card.IsAbleToRemove, tp, LOCATION_GRAVE, 0, nil)
-    local g2 = Duel.GetMatchingGroup(Card.IsAbleToRemove, 1 - tp, LOCATION_GRAVE, 0, nil)
+    local g1 = Duel.GetMatchingGroup(s.filter, tp, LOCATION_GRAVE, 0, nil)
+    local g2 = Duel.GetMatchingGroup(s.filter, 1 - tp, LOCATION_GRAVE, 0, nil)
     local ct = 0
     
     if #g1 > 0 then
