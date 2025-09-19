@@ -54,8 +54,8 @@ end
 
 -- 战斗破坏效果的操作
 function s.damop(e, tp, eg, ep, ev, re, r, rp)
-    local p, d = Duel.GetChainInfo(0, CHAININFO_TARGET_PLAYER, CHAININFO_TARGET_PARAM)
-    if Duel.Damage(p, d, REASON_EFFECT) > 0 then
+    local d = math.ceil(Duel.GetLP(1-tp)/2)
+    if Duel.Damage(1-tp, d, REASON_EFFECT) > 0 then
         Duel.Recover(tp, d, REASON_EFFECT)
     end
 end
