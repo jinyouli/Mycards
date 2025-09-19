@@ -36,7 +36,7 @@ function c513000145.mfilter(c)
 	return c:IsFaceup() and c:IsType(TYPE_MONSTER)
 end
 function c513000145.ovfilter(c)
-	return c:IsFaceup() and c:IsType(TYPE_EFFECT)
+	return c:IsFaceup() and c:IsType(TYPE_EFFECT) and not c:IsCode(513000145)
 end
 function c513000145.xyzop(e,tp,chk)
 	if chk==0 then return Duel.GetFlagEffect(tp,513000145)==0 end
