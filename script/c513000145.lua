@@ -1,7 +1,7 @@
 --サイバー・ドラゴン・インフィニティ
 function c513000145.initial_effect(c)
 	--xyz summon
-	aux.AddXyzProcedure(c,c513000145.mfilter,8,2,c513000145.ovfilter,aux.Stringid(77239255,3),3,c513000145.xyzop)
+	aux.AddXyzProcedure(c,c513000145.mfilter,10,3,c513000145.ovfilter,aux.Stringid(77239255,3),3,c513000145.xyzop)
 	c:EnableReviveLimit()
 	--atk
 	local e1=Effect.CreateEffect(c)
@@ -43,7 +43,7 @@ function c513000145.xyzop(e,tp,chk)
 	Duel.RegisterFlagEffect(tp,513000145,RESET_PHASE+PHASE_END,EFFECT_FLAG_OATH,1)
 end
 function c513000145.atkval(e,c)
-	return c:GetOverlayCount()*200
+	return c:GetOverlayCount()*500
 end
 function c513000145.filter(c)
 	return c:IsPosition(POS_FACEUP_ATTACK) and c:IsCanOverlay()
