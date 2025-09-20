@@ -1,4 +1,4 @@
--- 卡片ID定义，假设卡片密码为25041518（请根据实际修改）
+-- 天界王 志那都
 local s, id = GetID()
 function s.initial_effect(c)
     c:EnableReviveLimit()
