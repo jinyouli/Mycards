@@ -1,30 +1,10 @@
---大精霊機巧軍－ペンデュラム・ルーラー
 --Master Spirit Tech Force - Pendulum Ruler
---Fixed by Larry126
-local s,id=GetID()
-function s.initial_effect(c)
-	--pendulum summon
-	aux.EnablePendulumAttribute(c)
-	--fusion material
+function c511009372.initial_effect(c)
 	c:EnableReviveLimit()
-	aux.AddFusionProcCodeFun(c,511009366,s.ffilter,1,true,true)
-	
-	--disable
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetRange(LOCATION_MZONE)
-	e1:SetCode(EFFECT_DISABLE)
-	e1:SetTargetRange(0,LOCATION_MZONE)
-	e1:SetTarget(s.distg)
-	c:RegisterEffect(e1)
-	--cannot attack
-	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_FIELD)
-	e2:SetCode(EFFECT_CANNOT_ATTACK)
-	e2:SetRange(LOCATION_MZONE)
-	e2:SetTargetRange(0,LOCATION_MZONE)
-	e2:SetTarget(s.atlimit2)
-	c:RegisterEffect(e2)
+	aux.EnablePendulumAttribute(c,false)
+	--fusion material
+	aux.AddFusionProcCodeFun(c,511009366,c511009372.fusfilter,1,true,true)
+	c:EnableReviveLimit()	
 	--cannot be destroyed
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE)
@@ -33,6 +13,22 @@ function s.initial_effect(c)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetValue(1)
 	c:RegisterEffect(e3)
+	--cannot attack
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_FIELD)
+	e3:SetCode(EFFECT_CANNOT_ATTACK)
+	e3:SetRange(LOCATION_MZONE)
+	e3:SetTargetRange(0,LOCATION_MZONE)
+	e3:SetTarget(c511009372.atlimit2)
+	c:RegisterEffect(e3)
+	--disable
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetRange(LOCATION_MZONE)
+	e1:SetCode(EFFECT_DISABLE)
+	e1:SetTargetRange(0,LOCATION_MZONE)
+	e1:SetTarget(c511009372.distg)
+	c:RegisterEffect(e1)
 	--effect gain
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(25793414,1))
@@ -40,100 +36,123 @@ function s.initial_effect(c)
 	e4:SetType(EFFECT_TYPE_IGNITION)
 	e4:SetRange(LOCATION_MZONE)
 	e4:SetCountLimit(1)
-	e4:SetTarget(s.eftg)
-	e4:SetOperation(s.efop)
+	e4:SetTarget(c511009372.eftg)
+	e4:SetOperation(c511009372.efop)
 	c:RegisterEffect(e4)
 	--Set in P.Zone
-	local e5=Effect.CreateEffect(c)
-	e5:SetType(EFFECT_TYPE_IGNITION)
-	e5:SetRange(LOCATION_MZONE)
-	e5:SetTarget(s.pztg)
-	e5:SetOperation(s.pzop) 
-	c:RegisterEffect(e5)
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_IGNITION)
+	e3:SetRange(LOCATION_MZONE)
+	e3:SetTarget(c511009372.pztg)
+	e3:SetOperation(c511009372.pzop)	
+	c:RegisterEffect(e3)
 	--to extra
-	local e6=Effect.CreateEffect(c)
-	e6:SetType(EFFECT_TYPE_IGNITION)
-	e6:SetRange(LOCATION_PZONE)
-	e6:SetTarget(s.tetg)
-	e6:SetOperation(s.teop)
-	c:RegisterEffect(e6)
-	
-	local ge=Effect.CreateEffect(c)
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_IGNITION)
+	e2:SetRange(LOCATION_PZONE)
+	e2:SetTarget(c511009372.tetg)
+	e2:SetOperation(c511009372.teop)
+	c:RegisterEffect(e2)
+	if not c511009372.global_check then
+		c511009372.global_check=true
+		local ge=Effect.CreateEffect(c)
 		ge:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 		ge:SetCode(EVENT_CHAINING)
-		ge:SetOperation(s.checkop)
+		ge:SetOperation(c511009372.checkop)
 		Duel.RegisterEffect(ge,0)
-end
-s.listed_series={0x154e}
-s.material_setcode={0x54e}
-
-function s.ffilter(c,fc,sub,mg,sg)
-	return c:IsCode(511009363) or c:IsCode(511009366) or c:IsCode(511009367) or c:IsCode(511009372)
-end
-
-function s.checkop(e,tp,eg,ep,ev,re,r,rp)
-	if re:IsActiveType(TYPE_MONSTER) then
-		re:GetHandler():RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD,0,1)
 	end
 end
-function s.atlimit2(e,c)
-	return (not c:IsType(TYPE_PENDULUM) or c:IsLevelBelow(e:GetHandler():GetLevel())) and not c:IsImmuneToEffect(e)
+--spirit OCG collection
+c511009372.collection={
+	[67105242]=true; 
+	[487395]=true; 
+	[92736188]=true; 
+	[67957315]=true; 
+	[59822133]=true; 
+	[2420921]=true; 
+	[93599951]=true; 
+	[20802187]=true; 
+	[16674846]=true; 
+	[50418970]=true; 
+	[53239672]=true; 
+	[92394653]=true; 
+}
+function c511009372.fusfilter(c)
+	return c:IsSetCard(0x54e) or c511009372.collection[c:GetCode()]
 end
-function s.distg(e,c)
-	return (not c:IsType(TYPE_PENDULUM) or c:IsLevelBelow(e:GetHandler():GetLevel())) and c:IsType(TYPE_EFFECT)
+
+function c511009372.atlimit2(e,c)
+	local lv=c:GetLevel()
+	return lv<e:GetHandler():GetLevel() and not c:IsImmuneToEffect(e)
 end
-function s.effilter(c)
-	return c:IsFaceup() and c:IsSummonType(SUMMON_TYPE_PENDULUM) and c:IsPreviousLocation(LOCATION_HAND)
-		and c:IsSetCard(0x154e) and c:GetFlagEffect(id)==0 and c:IsReleasableByEffect()
+function c511009372.distg(e,c)
+	local lv=c:GetLevel()
+	return lv<e:GetHandler():GetLevel() and c:IsType(TYPE_EFFECT)
 end
-function s.eftg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and s.effilter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(s.effilter,tp,LOCATION_MZONE,0,1,nil) end
+function c511009372.effilter(c)
+	return c:IsFaceup() and c:IsSummonType(SUMMON_TYPE_PENDULUM) and c:IsPreviousLocation(LOCATION_HAND) and c:IsSetCard(0x1414) and	c:GetFlagEffect(511009366)==0	and c:IsReleasableByEffect()
+end
+function c511009372.eftg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and c511009372.effilter(chkc) end
+	if chk==0 then return Duel.IsExistingTarget(c511009372.effilter,tp,LOCATION_MZONE,0,1,nil)
+	end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONTROL)
-	local g=Duel.SelectTarget(tp,s.effilter,tp,LOCATION_MZONE,0,1,1,nil)
+	local g=Duel.SelectTarget(tp,c511009372.effilter,tp,LOCATION_MZONE,0,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_CONTROL,g,1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_HANDES,nil,0,tp,1)
 end
-function s.efop(e,tp,eg,ep,ev,re,r,rp)
+function c511009372.efop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc and tc:IsFaceup() and tc:IsRelateToEffect(e) and Duel.Release(tc,REASON_EFFECT)>0 then
-		local c=e:GetHandler()
-		local fid=c:GetFieldID()
+	local c=e:GetHandler()
+	if tc:IsFaceup() and tc:IsRelateToEffect(e) and not tc:IsImmuneToEffect(e) and Duel.Release(tc,REASON_EFFECT)>0 then
 		Duel.MajesticCopy(c,tc)
 		Duel.MajesticCopy(c,tc)
-		c:RegisterFlagEffect(tc:GetOriginalCode(),RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,1) --Treated as Pendulum Summoned from hand for Spirit Gem effects
-		local e1=Effect.CreateEffect(c)
+		e:GetHandler():RegisterFlagEffect(tc:GetCode(),RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,1)
+		if c:GetFlagEffect(511009372)==0 then
+		--double
+		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_FIELD)
 		e1:SetCode(EFFECT_CHANGE_DAMAGE)
-		e1:SetRange(LOCATION_MZONE)
-		e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+		e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+		e1:SetCountLimit(1)
 		e1:SetTargetRange(1,1)
-		e1:SetLabel(fid)
-		e1:SetValue(s.damval)
-		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
-		c:RegisterEffect(e1)
+		e1:SetValue(c511009372.damval)
+		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+		Duel.RegisterEffect(e1,tp)
+		c:RegisterFlagEffect(511009372,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,1)
+		end
 	end
 end
-function s.damval(e,re,val,r,rp,rc)
-	local cc=Duel.GetCurrentChain()
-	if cc==0 or r&REASON_EFFECT==0 then return val end
-	if re:GetHandler():GetFieldID()==e:GetLabel() then return val*2 else return val end
+function c511009372.lol(e,tp,eg,ep,ev,re,r,rp)
+	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
+	Duel.Damage(p,d,REASON_EFFECT)
 end
-function s.pztg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetMatchingGroupCount(aux.TRUE,tp,LOCATION_PZONE,0,nil)<2 end
+
+function c511009372.damval(e,re,val,r,rp,rc)
+	local c=e:GetHandler()
+	if bit.band(r,REASON_EFFECT)>0 and re:GetHandler()==c then return val*2 else return val end
 end
-function s.pzop(e,tp,eg,ep,ev,re,r,rp)
+function c511009372.pzfilter(c)
+	return (c:GetSequence()==6 or c:GetSequence()==7)
+end
+function c511009372.pztg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.GetMatchingGroupCount(c511009372.pzfilter,tp,LOCATION_SZONE,0,nil)<2 end
+end
+function c511009372.pzop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) then
 		Duel.MoveToField(c,tp,tp,LOCATION_PZONE,POS_FACEUP,true)
 	end
 end
-function s.tetg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+
+
+function c511009372.tetg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return not e:GetHandler():IsForbidden() end
 end
-function s.teop(e,tp,eg,ep,ev,re,r,rp)
+function c511009372.teop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) then
-		Duel.SendtoDeck(c,nil,2,REASON_EFFECT)
+		-- Duel.SendtoHand(c,nil,REASON_EFFECT)
+		Duel.SendtoExtraP(c,tp,REASON_EFFECT)
 	end
 end
