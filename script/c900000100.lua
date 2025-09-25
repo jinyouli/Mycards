@@ -1,6 +1,5 @@
--- 时隙支配者 (Ruler of the Time Slot)
+-- 绝杀神印
 function c900000100.initial_effect(c)
-    -- 激活后直接留在场上
     -- 一回合一次的多选效果
     local e1 = Effect.CreateEffect(c)
     e1:SetType(EFFECT_TYPE_ACTIVATE)
