@@ -864,8 +864,8 @@ end
 function c419.matfilter2(c,syncard,tp)
 	local code=syncard:GetOriginalCode()
 	local mt=_G["c" .. code]
-	return c:IsNotTuner() and c419.xyzsyncfilter(c,syncard) and mt.nontuner_filter and mt.nontuner_filter(c) 
-		and (c:IsControler(tp) or c:IsHasEffect(EFFECT_SYNCHRO_MATERIAL))
+	
+	return c:IsNotTuner(syncard) and c419.xyzsyncfilter(c,syncard) and c:IsControler(tp)
 end
 function c419.xyzsyncfilter(c,syncard,mat)
 	if mat then
