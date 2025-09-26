@@ -54,7 +54,7 @@ function s.initial_effect(c)
 		else return chain() end
 	end
 end
-s.listed_series={0x14b}
+s.listed_series={0x14a}
 function s.accon(e,tp,eg,ep,ev,re,r,rp)
 	return ep==1-tp and Duel.GetFieldGroupCount(tp,LOCATION_ONFIELD,0)==0
 end
@@ -73,7 +73,7 @@ function s.numcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.tgfilter(c,e,tp,eg,ep,ev,re,r,rp,chain,chk)
 	local te=c:GetActivateEffect()
-	if not c:IsSetCard(0x14b) or not c:IsAbleToGrave() or not te then return end
+	if not c:IsSetCard(0x14a) or not c:IsAbleToGrave() or not te or c:IsCode(41418852) or c:IsCode(511000275) then return end
 	local condition=te:GetCondition()
 	local cost=te:GetCost()
 	local target=te:GetTarget()
