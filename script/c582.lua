@@ -16,8 +16,7 @@ end
 function c582.condition(e,tp,eg,ep,ev,re,r,rp)
 	local ex,tg,tc=Duel.GetOperationInfo(ev,CATEGORY_DESTROY)
 	local ex2,tg2,tc2=Duel.GetOperationInfo(ev,CATEGORY_REMOVE)
-	return (ex or ex2) 
-	and re:GetHandler():IsControler(1-tp) and Duel.IsChainNegatable(ev)
+	return re:GetHandler():IsControler(1-tp) and Duel.IsChainNegatable(ev)
 end
 function c582.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

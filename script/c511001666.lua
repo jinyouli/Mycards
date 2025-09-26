@@ -12,12 +12,9 @@ function s.initial_effect(c)
 	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
 end
-function s.cfilter(c)
-	return c:GetSequence()<5
-end
+
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
-	return ep==1-tp and #eg==1 and Duel.GetCurrentChain(true)==0 and eg:GetFirst():GetSummonType()==SUMMON_TYPE_XYZ
-		and not Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_ONFIELD,0,1,e:GetHandler())
+	return ep==1-tp
 end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 or eg:IsExists(Card.IsDestructable,1,nil) end
