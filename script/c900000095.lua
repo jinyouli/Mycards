@@ -1,23 +1,23 @@
 -- 確率變動 (Probability Fluctuation) 陷阱卡
 local s, id = GetID()
-
 function s.initial_effect(c)
     --Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
-e1:SetCountLimit(1)
-	e1:SetOperation(s.regop)
+    e1:SetCountLimit(1)
+	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
 end
 
-function s.regop(e,tp,eg,ep,ev,re,r,rp)
+function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e1:SetCode(EVENT_TOSS_DICE_NEGATE)
 	e1:SetOperation(s.diceop)
     e1:SetCountLimit(1)
-e1:SetCondition(s.coincon)	e1:SetReset(RESET_PHASE+PHASE_END)
+    e1:SetCondition(s.coincon)	
+    e1:SetReset(RESET_PHASE+PHASE_END)
 	Duel.RegisterEffect(e1,tp)
 
     --coin
@@ -26,7 +26,7 @@ e1:SetCondition(s.coincon)	e1:SetReset(RESET_PHASE+PHASE_END)
 	e2:SetCode(EVENT_TOSS_COIN_NEGATE)
 	e2:SetOperation(s.coinop)
     e2:SetCountLimit(1)
-e2:SetCondition(s.coincon)
+    e2:SetCondition(s.coincon)
     e2:SetReset(RESET_PHASE+PHASE_END)
 	Duel.RegisterEffect(e2,tp)
 end
