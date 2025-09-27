@@ -1,6 +1,5 @@
--- 速攻魔法：连锁爆发
+-- 速攻魔法：陷阱推进器
 function c900000101.initial_effect(c)
-    -- 激活效果
     local e1=Effect.CreateEffect(c)
     e1:SetCategory(CATEGORY_HANDES)
     e1:SetType(EFFECT_TYPE_ACTIVATE)
