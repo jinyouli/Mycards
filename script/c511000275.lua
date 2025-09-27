@@ -26,6 +26,7 @@ function s.initial_effect(c)
 	e3:SetRange(LOCATION_FZONE)
 	e3:SetTargetRange(1,1)
 	c:RegisterEffect(e3)
+
 	--Activate in the opponent's turn
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(12079734,0))
@@ -33,10 +34,10 @@ function s.initial_effect(c)
 	e4:SetCode(EVENT_FREE_CHAIN)
 	e4:SetRange(LOCATION_FZONE)
 	e4:SetCountLimit(1,0,EFFECT_COUNT_CODE_SINGLE)
-	-- e4:SetCondition(s.numcon)
 	e4:SetTarget(s.numtg)
 	e4:SetOperation(s.numop)
 	c:RegisterEffect(e4)
+
 	local e5=Effect.CreateEffect(c)
 	e5:SetDescription(aux.Stringid(93016201,0))
 	e5:SetType(EFFECT_TYPE_QUICK_O)
@@ -47,6 +48,7 @@ function s.initial_effect(c)
 	e5:SetTarget(s.numtg)
 	e5:SetOperation(s.numop)
 	c:RegisterEffect(e5)
+
 	local chain=Duel.GetCurrentChain
 	copychain=0
 	Duel.GetCurrentChain=function()
@@ -68,6 +70,7 @@ function s.acop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.RaiseEvent(c,EVENT_CHAIN_SOLVED,c:GetActivateEffect(),0,tp,tp,Duel.GetCurrentChain())
 	end
 end
+
 function s.numcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetFieldGroupCount(tp,LOCATION_ONFIELD,0)<=1
 end
@@ -96,16 +99,23 @@ function s.tgfilter(c,e,tp,eg,ep,ev,re,r,rp,chain,chk)
 end
 function s.numtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local chain=Duel.GetCurrentChain()
-	if chk==0 then return Duel.IsExistingMatchingCard(s.tgfilter,tp,LOCATION_DECK+LOCATION_HAND,0,1,nil,e,tp,eg,ep,ev,re,r,rp,chain) end
-	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_DECK+LOCATION_HAND)
+	if chk==0 then return Duel.IsExistingMatchingCard(s.tgfilter,tp,LOCATION_DECK+LOCATION_HAND+LOCATION_GRAVE,0,1,nil,e,tp,eg,ep,ev,re,r,rp,chain) end
+	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_DECK+LOCATION_HAND+LOCATION_GRAVE)
 end
 function s.numop(e,tp,eg,ep,ev,re,r,rp)
 	local chain=Duel.GetCurrentChain()-1
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local g=Duel.SelectMatchingCard(tp,s.tgfilter,tp,LOCATION_DECK+LOCATION_HAND,0,1,1,nil,e,tp,eg,ep,ev,re,r,rp,chain,true)
+	local g=Duel.SelectMatchingCard(tp,s.tgfilter,tp,LOCATION_DECK+LOCATION_HAND+LOCATION_GRAVE,0,1,1,nil,e,tp,eg,ep,ev,re,r,rp,chain,true)
 	local tc=g:GetFirst()
 	copychain=0
-	if tc and Duel.SendtoGrave(g,REASON_EFFECT)>0 then
+
+	if tc then
+		if tc:IsLocation(LOCATION_GRAVE) then
+			Duel.SendtoDeck(g,nil,SEQ_DECKTOP,REASON_EFFECT)
+		else
+			Duel.SendtoGrave(g,REASON_EFFECT)
+		end
+
 		local te=tc:GetActivateEffect()
 		local cost=te:GetCost()
 		local tg=te:GetTarget()
