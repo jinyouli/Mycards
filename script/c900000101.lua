@@ -20,7 +20,7 @@ end
 
 -- 过滤函数：筛选手牌中的陷阱卡
 function c900000101.filter(c)
-    return c:IsType(TYPE_TRAP) and c:CheckActivateEffect(false, false, false) ~= nil
+    return c:IsType(TYPE_TRAP)
 end
 
 -- 效果操作函数：执行发动效果
@@ -41,6 +41,7 @@ function c900000101.activate(e, tp, eg, ep, ev, re, r, rp)
         -- 关键修正：将陷阱卡表侧表示放置到魔法与陷阱区域
         if Duel.MoveToField(tc, tp, tp, LOCATION_SZONE, POS_FACEUP, true) then
             -- 获取陷阱卡的激活效果
+            local m=_G["c"..tc:GetCode()]
             local te = tc:GetActivateEffect()
             if te then
                 -- 模拟陷阱卡的正常发动流程
@@ -54,20 +55,29 @@ function c900000101.activate(e, tp, eg, ep, ev, re, r, rp)
                 if target then
                     target(te, tp, eg, ep, ev, re, r, rp, 1)
                 end
-
-                local m=_G["c"..tc:GetCode()]
-                if m.activate then
-                    m.activate(e,tp,eg,ep,ev,re,r,rp)
+            else
+                if m.cost then
+                    m.cost(e,tp,eg,ep,ev,re,r,rp,1)
                 end
-                if m.operation then
-                    m.operation(e,tp,eg,ep,ev,re,r,rp)   
+                if m.target then
+                    m.target(e,tp,eg,ep,ev,re,r,rp,1)
                 end
-
-                if tc:GetType()~=TYPE_TRAP+TYPE_CONTINUOUS then
-                    Duel.SendtoGrave(tc, REASON_RULE)
-                end 
             end
-        end
 
+            if m.activate then
+                m.activate(e,tp,eg,ep,ev,re,r,rp)
+            end
+            if m.operation then
+                m.operation(e,tp,eg,ep,ev,re,r,rp)   
+            end
+            if m.spop then
+                m.spop(e,tp,eg,ep,ev,re,r,rp)   
+            end
+
+            if tc:GetType()~=TYPE_TRAP+TYPE_CONTINUOUS then
+                Duel.SendtoGrave(tc, REASON_RULE)
+            end 
+        end
     end
 end
+
