@@ -20,7 +20,7 @@ end
 
 -- 过滤函数：筛选手牌中的陷阱卡
 function c900000101.filter(c)
-    return c:IsType(TYPE_TRAP)
+    return c:IsType(TYPE_TRAP) and not c:IsType(TYPE_COUNTER)
 end
 
 -- 效果操作函数：执行发动效果
@@ -49,35 +49,28 @@ function c900000101.activate(e, tp, eg, ep, ev, re, r, rp)
                 local target = te:GetTarget()
                 
                 if cost then
-                    -- cost(te, tp, eg, ep, ev, re, r, rp, 1)
                     pcall(cost, te, tp, eg, ep, ev, re, r, rp, 1)
                 end
                 -- 设置Target
                 if target then
-                    -- target(te, tp, eg, ep, ev, re, r, rp, 1)
                     pcall(target, te, tp, eg, ep, ev, re, r, rp, 1)
                 end
             else
                 if m.cost then
-                    -- m.cost(e,tp,eg,ep,ev,re,r,rp,1)
                     pcall(m.cost, e,tp,eg,ep,ev,re,r,rp,1)
                 end
                 if m.target then
-                    -- m.target(e,tp,eg,ep,ev,re,r,rp,1)
                     pcall(m.target, e,tp,eg,ep,ev,re,r,rp,1)
                 end
             end
 
             if m.activate then
-                -- m.activate(e,tp,eg,ep,ev,re,r,rp)
                 pcall(m.activate, e,tp,eg,ep,ev,re,r,rp)
             end
-            if m.operation then
-                -- m.operation(e,tp,eg,ep,ev,re,r,rp)   
+            if m.operation then 
                 pcall(m.operation, e,tp,eg,ep,ev,re,r,rp)
             end
             if m.spop then
-                -- m.spop(e,tp,eg,ep,ev,re,r,rp)  
                 pcall(m.spop, e,tp,eg,ep,ev,re,r,rp) 
             end
 
