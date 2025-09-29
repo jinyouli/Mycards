@@ -77,8 +77,24 @@ function c511000793.activate(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetLabelObject(e4)
 		e1:SetOperation(c511000793.leaveop)
 		tc:RegisterEffect(e1)
+
+		local e0=Effect.CreateEffect(e:GetHandler())
+		e0:SetType(EFFECT_TYPE_FIELD)
+		e0:SetCode(EFFECT_CHANGE_DAMAGE)
+		e0:SetRange(LOCATION_MZONE)
+		e0:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE)
+		e0:SetReset(RESET_EVENT+RESETS_STANDARD)
+		e0:SetTargetRange(1,0)
+		e0:SetCondition(c511000793.con)
+		e0:SetValue(0)
+		tc:RegisterEffect(e0,true)
 	end
 end
+
+function c511000793.con(e)
+	return e:GetHandlerPlayer()==e:GetOwnerPlayer()
+end
+
 function c511000793.lcon(e,tp,eg,ep,ev,re,r,rp)
 	return not e:GetLabelObject():IsReason(REASON_DESTROY+REASON_FUSION+REASON_SYNCHRO+REASON_XYZ)
 end
