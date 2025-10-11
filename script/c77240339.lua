@@ -82,17 +82,32 @@ function s.spop(e, tp, eg, ep, ev, re, r, rp)
     local g = Duel.SelectMatchingCard(tp, s.filter, tp, LOCATION_GRAVE, 0, 1, 1, nil)
     local tc = g:GetFirst()
     local c = e:GetHandler()
-    local opt = Duel.SelectOption(e:GetHandlerPlayer(), aux.Stringid(id, 2), aux.Stringid(id, 3), aux.Stringid(id, 4))
+
+    
+
+    local opt = Duel.SelectOption(e:GetHandlerPlayer(), aux.Stringid(id, 2), aux.Stringid(id, 3))
     if opt == 0 then
-        tc:SetEntityCode(15259703, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, true)
-        aux.CopyCardTable(15259703,tc)
-    elseif opt == 1 then
-        tc:SetEntityCode(900000079, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, true)
-        aux.CopyCardTable(900000079,tc)
+        Duel.SendtoHand(tc, nil, REASON_EFFECT)
+        Duel.ConfirmCards(1 - tp, tc)
     else
-        tc:SetEntityCode(77240346, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, true)
-        aux.CopyCardTable(77240346,tc)
+        Duel.MoveToField(tc, tp, tp, LOCATION_SZONE, POS_FACEUP, true)
+        local te = tc:GetActivateEffect()
+        local tep = tc:GetControler()
+        local cost = te:GetCost()
+        if cost then cost(te, tep, eg, ep, ev, re, r, rp, 1) end
     end
+
+
+    -- 修改卡名
+    local e01 = Effect.CreateEffect(tc)
+    e01:SetType(EFFECT_TYPE_SINGLE)
+    e01:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+    e01:SetCode(EFFECT_CHANGE_CODE)
+    e01:SetValue(15259703)
+    e01:SetReset(RESET_EVENT+RESETS_STANDARD)
+    tc:RegisterEffect(e01)
+    
+
     --[[ local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE)
 	e2:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_CANNOT_NEGATE)
@@ -124,18 +139,18 @@ function s.spop(e, tp, eg, ep, ev, re, r, rp)
             if cost then cost(te, tep, eg, ep, ev, re, r, rp, 1) end
         end
     end ]]
-    aux.ToHandOrElse(tc, tp, function(c)
-        local te = tc:GetActivateEffect()
-        return te:IsActivatable(tp, true, true) and Duel.GetLocationCount(tp, LOCATION_SZONE) > 0
-    end,
-        function(c)
-            Duel.MoveToField(tc, tp, tp, LOCATION_SZONE, POS_FACEUP, true)
-            local te = tc:GetActivateEffect()
-            local tep = tc:GetControler()
-            local cost = te:GetCost()
-            if cost then cost(te, tep, eg, ep, ev, re, r, rp, 1) end
-        end,
-        aux.Stringid(id, 0))
+    -- aux.ToHandOrElse(tc, tp, function(c)
+    --     local te = tc:GetActivateEffect()
+    --     return te:IsActivatable(tp, true, true) and Duel.GetLocationCount(tp, LOCATION_SZONE) > 0
+    -- end,
+    --     function(c)
+    --         Duel.MoveToField(tc, tp, tp, LOCATION_SZONE, POS_FACEUP, true)
+    --         local te = tc:GetActivateEffect()
+    --         local tep = tc:GetControler()
+    --         local cost = te:GetCost()
+    --         if cost then cost(te, tep, eg, ep, ev, re, r, rp, 1) end
+    --     end,
+    --     aux.Stringid(id, 0))
 end
 
 function s.sfilter(c)
