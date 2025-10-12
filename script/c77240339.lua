@@ -83,74 +83,35 @@ function s.spop(e, tp, eg, ep, ev, re, r, rp)
     local tc = g:GetFirst()
     local c = e:GetHandler()
 
-    
-
     local opt = Duel.SelectOption(e:GetHandlerPlayer(), aux.Stringid(id, 2), aux.Stringid(id, 3))
     if opt == 0 then
         Duel.SendtoHand(tc, nil, REASON_EFFECT)
         Duel.ConfirmCards(1 - tp, tc)
+
+        local e02 = Effect.CreateEffect(tc)
+        e02:SetType(EFFECT_TYPE_SINGLE) -- 单体效果，影响自身
+        e02:SetCode(EFFECT_REMAIN_FIELD) -- 效果代码：留在场上
+        tc:RegisterEffect(e02)
+        Card.ReplaceEffect(tc,15259703,RESET_EVENT+RESETS_STANDARD-RESET_TOFIELD)
+
     else
         Duel.MoveToField(tc, tp, tp, LOCATION_SZONE, POS_FACEUP, true)
-        local te = tc:GetActivateEffect()
-        local tep = tc:GetControler()
-        local cost = te:GetCost()
-        if cost then cost(te, tep, eg, ep, ev, re, r, rp, 1) end
+        local m=_G["c15259703"]
+        if m then
+            if m.cost then
+                m.cost(te, tep, eg, ep, ev, re, r, rp, 1)
+            end
+        end
     end
-
-
-    -- 修改卡名
-    local e01 = Effect.CreateEffect(tc)
-    e01:SetType(EFFECT_TYPE_SINGLE)
-    e01:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-    e01:SetCode(EFFECT_CHANGE_CODE)
-    e01:SetValue(15259703)
-    e01:SetReset(RESET_EVENT+RESETS_STANDARD)
-    tc:RegisterEffect(e01)
-    
-
-    --[[ local e2=Effect.CreateEffect(c)
+ 
+    local e2=Effect.CreateEffect(tc)
 	e2:SetType(EFFECT_TYPE_SINGLE)
-	e2:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_CANNOT_NEGATE)
+	e2:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_CANNOT_DISABLE)
 	e2:SetCode(EFFECT_CHANGE_CODE)
 	e2:SetValue(15259703)
 	e2:SetRange(LOCATION_ONFIELD+LOCATION_HAND)
 	e2:SetReset(RESET_EVENT+RESETS_STANDARD-RESET_TOFIELD)
 	tc:RegisterEffect(e2)
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_SET_AVAILABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_CANNOT_NEGATE)
-	e1:SetCode(EFFECT_ADD_TYPE)
-	e1:SetRange(LOCATION_ONFIELD+LOCATION_HAND)
-	e1:SetValue(TYPE_FIELD)
-	e1:SetReset(RESET_EVENT+RESETS_STANDARD-RESET_TOFIELD)
-	tc:RegisterEffect(e1)
-	Card.ReplaceEffect(tc,15259703,RESET_EVENT+RESETS_STANDARD-RESET_TOFIELD)]]
-    --[[ if tc then
-        local b1 = tc:IsAbleToHand()
-        local b2 = tc:GetActivateEffect():IsActivatable(tp)
-        if b1 and (not b2 or Duel.SelectOption(tp, 1190, 1150) == 0) then
-            Duel.SendtoHand(tc, nil, REASON_EFFECT)
-            Duel.ConfirmCards(1 - tp, tc)
-        else
-            Duel.MoveToField(tc, tp, tp, LOCATION_SZONE, POS_FACEUP, true)
-            local te = tc:GetActivateEffect()
-            local tep = tc:GetControler()
-            local cost = te:GetCost()
-            if cost then cost(te, tep, eg, ep, ev, re, r, rp, 1) end
-        end
-    end ]]
-    -- aux.ToHandOrElse(tc, tp, function(c)
-    --     local te = tc:GetActivateEffect()
-    --     return te:IsActivatable(tp, true, true) and Duel.GetLocationCount(tp, LOCATION_SZONE) > 0
-    -- end,
-    --     function(c)
-    --         Duel.MoveToField(tc, tp, tp, LOCATION_SZONE, POS_FACEUP, true)
-    --         local te = tc:GetActivateEffect()
-    --         local tep = tc:GetControler()
-    --         local cost = te:GetCost()
-    --         if cost then cost(te, tep, eg, ep, ev, re, r, rp, 1) end
-    --     end,
-    --     aux.Stringid(id, 0))
 end
 
 function s.sfilter(c)
