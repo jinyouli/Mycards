@@ -34,7 +34,6 @@ end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local conf=Duel.GetFieldGroup(tp,0,LOCATION_MZONE+LOCATION_HAND+LOCATION_DECK)
 	if #conf>0 then
-		Duel.ConfirmCards(tp,conf)
 		local dg=conf:Filter(s.filter,nil)
 		Duel.Destroy(dg,REASON_EFFECT)
 		Duel.ShuffleHand(1-tp)
