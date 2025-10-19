@@ -32,7 +32,7 @@ function c77238297.initial_effect(c)
 		ge1:SetCountLimit(1)
 		-- 设置发动条件（关键：检查是否为对方回合）
     	ge1:SetCondition(c77238297.conditionStandby)
-		ge1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+		ge1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE)
 		ge1:SetOperation(c77238297.chkop)
 		Duel.RegisterEffect(ge1,0)
 	end
