@@ -2,12 +2,13 @@
 function c123110.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(CATEGORY_DESTROY)
+	e1:SetCategory(CATEGORY_POSITION)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetTarget(c123110.target)
 	e1:SetOperation(c123110.activate)
 	c:RegisterEffect(e1)
+
 	if not c123110.global_check then
 		c123110.global_check=true
 		local ge1=Effect.CreateEffect(c)

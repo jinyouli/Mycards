@@ -1,7 +1,5 @@
 --万物创始之雏(Z)
 function c900000082.initial_effect(c)
-
-
 	--special summon
 	local e0=Effect.CreateEffect(c)
 	e0:SetType(EFFECT_TYPE_FIELD)
@@ -10,8 +8,6 @@ function c900000082.initial_effect(c)
 	e0:SetRange(LOCATION_HAND)
 	e0:SetCondition(c900000082.spcon)
 	c:RegisterEffect(e0)
-
-
 
 	--特殊召唤
 	local e1=Effect.CreateEffect(c)

@@ -1,13 +1,10 @@
 # Mycards
-自定义的卡片
+custom cards
+make the zip in ygocore/expansions
 
-压缩后放在ygocore/expansions目录下
+make a log：
+Debug.Message("msg .")
 
-输出日志：Debug.Message("msg .")
-
-lua指令的源码在ocgcore工程
-ocgcore-KCG
-https://github.com/edo9300/ygopro-core
-
-或者ygomobile工程里面的ocgcore
+base on lua ocgcore program
+ygomobile program
 https://github.com/garymabin/YGOMobile
