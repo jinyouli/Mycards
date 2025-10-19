@@ -20,402 +20,133 @@ function c77238297.initial_effect(c)
 	e3:SetType(EFFECT_TYPE_IGNITION)
     e3:SetRange(LOCATION_SZONE)
     e3:SetCountLimit(1)
-	e3:SetCondition(c77238297.condition)
-    e3:SetOperation(c77238297.activate)
+	e3:SetTarget(c77238297.target)
+	e3:SetOperation(c77238297.activate)
     c:RegisterEffect(e3)
+
+	if not c77238297.global_check then
+		c77238297.global_check=true
+		local ge1=Effect.CreateEffect(c)
+		ge1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		ge1:SetCode(EVENT_PHASE+PHASE_STANDBY)
+		ge1:SetCountLimit(1)
+		-- 设置发动条件（关键：检查是否为对方回合）
+    	ge1:SetCondition(c77238297.conditionStandby)
+		ge1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+		ge1:SetOperation(c77238297.chkop)
+		Duel.RegisterEffect(ge1,0)
+	end
 end
 
-function c77238297.filter1(c)
-	return c:IsType(TYPE_MONSTER+TYPE_SPELL+TYPE_TRAP) and (c:GetTurnID()==(Duel.GetTurnCount()-1)) and c:IsPreviousLocation(LOCATION_HAND)
+-- 条件判断函数：检查是否为对方回合
+function c77238297.conditionStandby(e,tp,eg,ep,ev,re,r,rp)
+    return Duel.GetTurnPlayer()==tp  -- 当前回合玩家不是卡牌控制者（即对方回合）
 end
 
-function c77238297.filter2(c)
-	return c:IsType(TYPE_MONSTER+TYPE_SPELL+TYPE_TRAP) and (c:GetTurnID()==(Duel.GetTurnCount()-1)) and c:IsPreviousLocation(LOCATION_DECK)
+function c77238297.target(e,tp,eg,ep,ev,re,r,rp,chk)
+	local c=e:GetHandler()
+	if chk==0 then return Duel.IsExistingMatchingCard(c77238297.fil2,tp,LOCATION_MZONE+LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE+LOCATION_REMOVED+LOCATION_EXTRA,LOCATION_MZONE+LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE+LOCATION_REMOVED+LOCATION_EXTRA+LOCATION_FZONE+LOCATION_SZONE,1,nil) or Duel.IsExistingMatchingCard(c77238297.fil,tp,0xff,0xff,1,nil) end
 end
-
-function c77238297.filter3(c)
-	return c:IsType(TYPE_MONSTER+TYPE_SPELL+TYPE_TRAP) and (c:GetTurnID()==(Duel.GetTurnCount()-1)) and c:IsPreviousLocation(LOCATION_ONFIELD)
-end
-
-function c77238297.filter4(c)
-	return c:IsType(TYPE_MONSTER+TYPE_SPELL+TYPE_TRAP) and (c:GetTurnID()==(Duel.GetTurnCount()-1)) and c:IsPreviousLocation(LOCATION_GRAVE)
-end
-
-function c77238297.filter5(c)
-	return c:IsType(TYPE_MONSTER+TYPE_SPELL+TYPE_TRAP) and (c:GetTurnID()==(Duel.GetTurnCount()-1)) and c:IsPreviousLocation(LOCATION_REMOVED)
-end
-
-function c77238297.filter6(c)
-	return c:IsType(TYPE_MONSTER+TYPE_SPELL+TYPE_TRAP) and (c:GetTurnID()==(Duel.GetTurnCount()-1)) and c:IsPreviousLocation(LOCATION_EXTRA)
-end
-
-function c77238297.filter7(c)
-	return c:IsType(TYPE_MONSTER+TYPE_SPELL+TYPE_TRAP) and (c:GetTurnID()==Duel.GetTurnCount()) and c:IsPreviousLocation(LOCATION_DECK)
-end
-
-function c77238297.condition(c)
-	return Duel.GetTurnCount()>=2
-end
-
 function c77238297.activate(e,tp,eg,ep,ev,re,r,rp)
-	local sg1=Duel.GetMatchingGroup(c77238297.filter1,tp,LOCATION_DECK+LOCATION_ONFIELD+LOCATION_GRAVE+LOCATION_REMOVED,LOCATION_DECK+LOCATION_ONFIELD+LOCATION_GRAVE+LOCATION_REMOVED,e:GetHandler())
-    if #sg1>0 then
-	Duel.SendtoHand(sg1,nil,REASON_RULE)
-    end
-    local sg2=Duel.GetMatchingGroup(c77238297.filter2,tp,LOCATION_HAND+LOCATION_ONFIELD+LOCATION_GRAVE+LOCATION_REMOVED,LOCATION_HAND+LOCATION_ONFIELD+LOCATION_GRAVE+LOCATION_REMOVED,e:GetHandler())
-    if #sg2>0 then
-		local tc=sg2:GetFirst()
+
+	if Duel.GetTurnCount() == 1 then
+		return
+	end
+
+	local g=Duel.GetMatchingGroup(c77238297.fil2,tp,LOCATION_MZONE+LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE+LOCATION_REMOVED+LOCATION_EXTRA,LOCATION_MZONE+LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE+LOCATION_REMOVED+LOCATION_EXTRA+LOCATION_FZONE+LOCATION_SZONE,nil)
+	if g:GetCount()>0 then
+		local tc=g:GetFirst()
 		while tc do
-			local og=tc:GetOverlayGroup()
-			local tc1=og:GetFirst()
+			loc=tc:GetFlagEffectLabel(77238297-3)
+			if loc==1 then
+				Duel.SendtoDeck(tc,tc:GetFlagEffectLabel(77238297-1),2,REASON_EFFECT)
+			elseif loc==2 then
+				Duel.SendtoHand(tc,tc:GetFlagEffectLabel(77238297-1),REASON_EFFECT)
+			elseif loc==8 then
+				if tc:IsType(TYPE_FIELD) then
+				    Duel.MoveToField(tc,tp,tc:GetFlagEffectLabel(77238297-1),LOCATION_FZONE,tc:GetFlagEffectLabel(77238297-2),true)
+				else
+					if not Duel.MoveToField(tc,tp,tc:GetFlagEffectLabel(77238297-1),loc,tc:GetFlagEffectLabel(77238297-2),true) then
+						Duel.ChangePosition(tc,tc:GetFlagEffectLabel(77238297-2))
+					end
+				end
+			elseif loc==4 then
+				if not Duel.MoveToField(tc,tp,tc:GetFlagEffectLabel(77238297-1),loc,tc:GetFlagEffectLabel(77238297-2),true) then
+					Duel.ChangePosition(tc,tc:GetFlagEffectLabel(77238297-2))
+				end
+			elseif loc==10 then
+				Duel.SendtoGrave(tc,REASON_EFFECT)
+			elseif loc==20 then
+				Duel.Remove(tc,tc:GetFlagEffectLabel(77238297-2),REASON_EFFECT)
+			elseif loc==64 then
+				Duel.SendtoDeck(tc,tc:GetFlagEffectLabel(77238297-1),2,REASON_EFFECT)
+			elseif loc==100 then
+				Duel.SendtoExtraP(tc,tc:GetFlagEffectLabel(77238297-1),REASON_EFFECT)
+			end
+			if tc:GetSequence()~=tc:GetFlagEffectLabel(77238297) then
+					Duel.MoveSequence(tc,tc:GetFlagEffectLabel(77238297))
+				end
+			tc=g:GetNext()
+		end
+	end
+	local g=Duel.GetMatchingGroup(c77238297.fil,tp,0xff,0xff,nil)
+	local g1=Duel.GetMatchingGroup(nil,tp,LOCATION_MZONE+LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE+LOCATION_REMOVED+LOCATION_EXTRA+LOCATION_FZONE+LOCATION_SZONE,LOCATION_MZONE+LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE+LOCATION_REMOVED+LOCATION_EXTRA+LOCATION_FZONE+LOCATION_SZONE,nil)
+	if g:GetCount()>0 then
+		if g1:GetCount()>0 then
+		local tc=g1:GetFirst()
+			while tc do
+				local seq=tc:GetSequence()
+				g=g:Filter(c77238297.fil3,nil,seq)
+				tc=g1:GetNext()
+			end
+		end
+		if g:GetCount()>0 then
+			local tc1=g:GetFirst()
 			while tc1 do
-				if tc1:IsType(TYPE_MONSTER) and tc:IsPreviousControler(1-tp) and tc1:IsPreviousPosition(POS_FACEUP_ATTACK) then
-					Duel.MoveToField(tc1,1-tp,1-tp,LOCATION_MZONE,POS_FACEUP_ATTACK,true)
-					tc1=og:GetNext()
-				elseif tc1:IsType(TYPE_MONSTER) and tc:IsPreviousControler(1-tp) and tc1:IsPreviousPosition(POS_FACEUP_DEFENSE) then
-					Duel.MoveToField(tc1,1-tp,1-tp,LOCATION_MZONE,POS_FACEUP_DEFENSE,true)
-				tc1=og:GetNext()
-				elseif tc1:IsType(TYPE_MONSTER) and tc:IsPreviousControler(tp) and tc1:IsPreviousPosition(POS_FACEUP_ATTACK) then
-					Duel.MoveToField(tc1,tp,tp,LOCATION_MZONE,POS_FACEUP_ATTACK,true)
-				tc1=og:GetNext()
-				elseif tc1:IsType(TYPE_MONSTER) and tc:IsPreviousControler(tp) and tc1:IsPreviousPosition(POS_FACEUP_DEFENSE) then
-					Duel.MoveToField(tc1,tp,tp,LOCATION_MZONE,POS_FACEUP_DEFENSE,true)
-				tc1=og:GetNext()
-				elseif tc1:IsType(TYPE_SPELL+TYPE_TRAP) and tc:IsPreviousControler(1-tp) and tc1:IsPreviousLocation(LOCATION_HAND) then
-					Duel.SendtoHand(tc1,1-tp,REASON_RULE)
-				tc1=og:GetNext()
-				elseif tc1:IsType(TYPE_SPELL+TYPE_TRAP) and tc:IsPreviousControler(1-tp) and tc1:IsPreviousLocation(LOCATION_DECK) then
-					Duel.SendtoDeck(tc1,1-tp,REASON_RULE)
-				tc1=og:GetNext()
-				elseif tc1:IsType(TYPE_SPELL+TYPE_TRAP) and tc:IsPreviousControler(1-tp) and tc1:IsPreviousLocation(LOCATION_ONFIELD) then
-					Duel.MoveToField(tc1,1-tp,1-tp,LOCATION_SZONE,POS_FACEDOWN,true)
-				tc1=og:GetNext()
-				elseif tc1:IsType(TYPE_SPELL+TYPE_TRAP) and tc:IsPreviousControler(1-tp) and tc1:IsPreviousLocation(LOCATION_GRAVE) then
-					Duel.SendtoGrave(tc1,REASON_RULE)
-				tc1=og:GetNext()
-				elseif tc1:IsType(TYPE_SPELL+TYPE_TRAP) and tc:IsPreviousControler(1-tp) and tc1:IsPreviousLocation(LOCATION_REMOVED) then
-					Duel.Remove(tc1,POS_FACEUP,REASON_RULE)
-				tc1=og:GetNext()
-				elseif tc1:IsType(TYPE_SPELL+TYPE_TRAP) and tc:IsPreviousControler(tp) and tc1:IsPreviousLocation(LOCATION_HAND) then
-					Duel.SendtoHand(tc1,tp,REASON_RULE)
-				tc1=og:GetNext()
-				elseif tc1:IsType(TYPE_SPELL+TYPE_TRAP) and tc:IsPreviousControler(tp) and tc1:IsPreviousLocation(LOCATION_DECK) then
-					Duel.SendtoDeck(tc1,tp,REASON_RULE)
-				tc1=og:GetNext()
-				elseif tc1:IsType(TYPE_SPELL+TYPE_TRAP) and tc:IsPreviousControler(tp) and tc1:IsPreviousLocation(LOCATION_ONFIELD) then
-					Duel.MoveToField(tc1,tp,tp,LOCATION_SZONE,POS_FACEDOWN,true)
-				tc1=og:GetNext()
-				elseif tc1:IsType(TYPE_SPELL+TYPE_TRAP) and tc:IsPreviousControler(tp) and tc1:IsPreviousLocation(LOCATION_GRAVE) then
-					Duel.SendtoGrave(tc1,REASON_RULE)
-				tc1=og:GetNext()
-				elseif tc1:IsType(TYPE_SPELL+TYPE_TRAP) and tc:IsPreviousControler(tp) and tc1:IsPreviousLocation(LOCATION_REMOVED) then
-					Duel.Remove(tc1,POS_FACEUP,REASON_RULE)
-				tc1=og:GetNext()
+				Duel.SpecialSummonStep(tc1,0,tc1:GetFlagEffectLabel(77238297-1),tc1:GetFlagEffectLabel(77238297-1),true,true,tc1:GetFlagEffectLabel(77238297-2))
+				if tc1:GetSequence()~=tc1:GetFlagEffectLabel(77238297) then
+					Duel.MoveSequence(tc1,tc1:GetFlagEffectLabel(77238297))
 				end
+				tc1=g:GetNext()
 			end
-			tc=sg2:GetNext()
+			Duel.SpecialSummonComplete()
 		end
-	Duel.SendtoDeck(sg2,nil,0,REASON_RULE)
-    end
-    local sg3=Duel.GetMatchingGroup(c77238297.filter3,tp,LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE+LOCATION_REMOVED+LOCATION_EXTRA,LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE+LOCATION_REMOVED+LOCATION_EXTRA,e:GetHandler())
-    if #sg3>0 then
-    local tc2=sg3:GetFirst()
-    while tc2 do
-    if tc2:IsType(TYPE_MONSTER) and tc2:IsPreviousControler(1-tp) and tc2:IsPreviousPosition(POS_FACEUP_ATTACK) then
-    Duel.MoveToField(tc2,1-tp,1-tp,LOCATION_MZONE,POS_FACEUP_ATTACK,true)
-    elseif tc2:IsType(TYPE_MONSTER) and tc2:IsPreviousControler(1-tp) and tc2:IsPreviousPosition(POS_FACEUP_DEFENSE) then
-    Duel.MoveToField(tc2,1-tp,1-tp,LOCATION_MZONE,POS_FACEUP_DEFENSE,true)
-    elseif tc2:IsType(TYPE_MONSTER) and tc2:IsPreviousControler(tp) and tc2:IsPreviousPosition(POS_FACEUP_ATTACK) then
-    Duel.MoveToField(tc2,tp,tp,LOCATION_MZONE,POS_FACEUP_ATTACK,true)
-    elseif tc2:IsType(TYPE_MONSTER) and tc2:IsPreviousControler(tp) and tc2:IsPreviousPosition(POS_FACEUP_DEFENSE) then
-    Duel.MoveToField(tc2,tp,tp,LOCATION_MZONE,POS_FACEUP_DEFENSE,true)
-    elseif tc2:IsType(TYPE_MONSTER) and tc2:IsPreviousControler(1-tp) and tc2:IsPreviousPosition(POS_FACEDOWN_DEFENSE) then
-    Duel.MoveToField(tc2,1-tp,1-tp,LOCATION_MZONE,POS_FACEDOWN_DEFENSE,true)
-    elseif tc2:IsType(TYPE_MONSTER) and tc2:IsPreviousControler(tp) and tc2:IsPreviousPosition(POS_FACEDOWN_DEFENSE) then
-    Duel.MoveToField(tc2,tp,tp,LOCATION_MZONE,POS_FACEDOWN_DEFENSE,true)
-	elseif tc2:IsType(TYPE_FIELD) and tc2:IsPreviousControler(1-tp) and tc2:IsPreviousPosition(POS_FACEUP) then
-    Duel.MoveToField(tc2,1-tp,1-tp,LOCATION_FZONE,POS_FACEUP,true)
-    elseif tc2:IsType(TYPE_FIELD) and tc2:IsPreviousControler(tp) and tc2:IsPreviousPosition(POS_FACEUP) then
-    Duel.MoveToField(tc2,tp,tp,LOCATION_FZONE,POS_FACEUP,true)
-	elseif tc2:IsType(TYPE_FIELD) and tc2:IsPreviousControler(1-tp) and tc2:IsPreviousPosition(POS_FACEDOWN) then
-    Duel.MoveToField(tc2,1-tp,1-tp,LOCATION_FZONE,POS_FACEDOWN,true)
-    elseif tc2:IsType(TYPE_FIELD) and tc2:IsPreviousControler(tp) and tc2:IsPreviousPosition(POS_FACEDOWN) then
-    Duel.MoveToField(tc2,tp,tp,LOCATION_FZONE,POS_FACEDOWN,true)
-    elseif tc2:IsType(TYPE_TRAP) and tc2:IsType(TYPE_EQUIP+TYPE_CONTINUOUS) and tc2:IsPreviousControler(1-tp) and tc2:IsPreviousPosition(POS_FACEUP) then
-		local te=tc2:GetActivateEffect()
-		local tep=tc2:GetControler()
-		local condition
-		local cost
-		local target
-		local operation
-		if te then
-			condition=te:GetCondition()
-			cost=te:GetCost()
-			target=te:GetTarget()
-			operation=te:GetOperation()
-		end
-		local chk=te and te:GetCode()==EVENT_FREE_CHAIN and te:IsActivatable(tep)
-			and (not condition or condition(te,tep,eg,ep,ev,re,r,rp))
-			and (not cost or cost(te,tep,eg,ep,ev,re,r,rp,0))
-			and (not target or target(te,tep,eg,ep,ev,re,r,rp,0))
-            Duel.MoveToField(tc2,1-tp,1-tp,LOCATION_SZONE,POS_FACEUP,true)
-		if chk then
-			Duel.ClearTargetCard()
-			e:SetProperty(te:GetProperty())
-			Duel.Hint(HINT_CARD,0,tc2:GetOriginalCode())
-			if tc2:GetType()==(TYPE_SPELL+TYPE_TRAP) then
-				tc2:CancelToGrave(false)
-			end
-			tc2:CreateEffectRelation(te)
-			if cost then cost(te,tep,eg,ep,ev,re,r,rp,1) end
-			if target~=te:GetTarget() then
-				target=te:GetTarget()
-			end
-			if target then target(te,tep,eg,ep,ev,re,r,rp,1) end
-			local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
-			for tg in aux.Next(g) do
-				tg:CreateEffectRelation(te)
-			end
-			tc2:SetStatus(STATUS_ACTIVATED,true)
-			if tc2:IsHasEffect(EFFECT_REMAIN_FIELD) then
-				tc2:SetStatus(STATUS_LEAVE_CONFIRMED,false)
-			end
-			if operation~=te:GetOperation() then
-				operation=te:GetOperation()
-			end
-			if operation then operation(te,tep,eg,ep,ev,re,r,rp) end
-			tc2:ReleaseEffectRelation(te)
-			for tg in aux.Next(g) do
-				tg:ReleaseEffectRelation(te)
-			end
+	end
+end
+function c77238297.fil(c)
+	return (c:GetFlagEffectLabel(77238297-3)==LOCATION_MZONE and not c:IsLocation(LOCATION_MZONE)) or 
+	(c:GetFlagEffectLabel(77238297-3)==LOCATION_HAND and not c:IsLocation(LOCATION_HAND)) or 
+	(c:GetFlagEffectLabel(77238297-3)==LOCATION_DECK and not c:IsLocation(LOCATION_DECK)) or 
+	(c:GetFlagEffectLabel(77238297-3)==LOCATION_GRAVE and not c:IsLocation(LOCATION_GRAVE)) or 
+	(c:GetFlagEffectLabel(77238297-3)==LOCATION_REMOVED and not c:IsLocation(LOCATION_REMOVED)) or 
+	(c:GetFlagEffectLabel(77238297-3)==LOCATION_EXTRA and not c:IsLocation(LOCATION_EXTRA))
+	or 
+	(c:GetFlagEffectLabel(77238297-3)==LOCATION_FZONE and not c:IsLocation(LOCATION_FZONE))
+	or 
+	(c:GetFlagEffectLabel(77238297-3)==LOCATION_SZONE and not c:IsLocation(LOCATION_SZONE))
+end
+function c77238297.fil2(c)
+	return c:GetFlagEffectLabel(77238297-3)~=c:GetLocation() or c:GetFlagEffectLabel(77238297-2)~=c:GetPosition() or c:GetFlagEffectLabel(77238297-1)~=c:GetControler()
+end
+function c77238297.fil3(c,seq)
+	return c:GetFlagEffectLabel(77238297)~=seq
+end
+function c77238297.chkop(e,tp,eg,ep,ev,re,r,rp)
+	local g=Duel.GetMatchingGroup(nil,tp,0xff,0xff,nil)
+	local tc=g:GetFirst()
+	while tc do
+		tc:ResetFlagEffect(77238297-3)
+		tc:ResetFlagEffect(77238297-2)
+		tc:ResetFlagEffect(77238297-1)
+		tc:ResetFlagEffect(77238297)
+		if tc:IsLocation(LOCATION_EXTRA) and tc:IsFaceup() and tc:IsType(TYPE_PENDULUM) then
+			tc:RegisterFlagEffect(77238297-3,0,0,1,100)
 		else
-			Duel.ChangePosition(tc2,POS_FACEDOWN)
+			tc:RegisterFlagEffect(77238297-3,0,0,1,tc:GetLocation())
 		end
-    elseif tc2:IsType(TYPE_SPELL+TYPE_TRAP) and (((not tc2:IsType(TYPE_EQUIP+TYPE_CONTINUOUS+TYPE_FIELD)) and tc2:IsPreviousPosition(POS_FACEUP)) or (tc2:IsType(TYPE_EQUIP+TYPE_CONTINUOUS) and tc2:IsPreviousPosition(POS_FACEDOWN)) or tc2:IsPreviousPosition(POS_FACEDOWN)) and tc2:IsPreviousControler(1-tp)  then
-    Duel.MoveToField(tc2,1-tp,1-tp,LOCATION_SZONE,POS_FACEDOWN,true)
-	elseif tc2:IsType(TYPE_SPELL+TYPE_TRAP) and tc2:IsType(TYPE_EQUIP+TYPE_CONTINUOUS) and tc2:IsPreviousControler(tp) and tc2:IsPreviousPosition(POS_FACEUP) then
-		local te=tc2:GetActivateEffect()
-		local tep=tc2:GetControler()
-		local condition
-		local cost
-		local target
-		local operation
-		if te then
-			condition=te:GetCondition()
-			cost=te:GetCost()
-			target=te:GetTarget()
-			operation=te:GetOperation()
-		end
-		local chk=te and te:GetCode()==EVENT_FREE_CHAIN and te:IsActivatable(tep)
-			and (not condition or condition(te,tep,eg,ep,ev,re,r,rp))
-			and (not cost or cost(te,tep,eg,ep,ev,re,r,rp,0))
-			and (not target or target(te,tep,eg,ep,ev,re,r,rp,0))
-			Duel.MoveToField(tc2,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
-		if chk then
-			Duel.ClearTargetCard()
-			e:SetProperty(te:GetProperty())
-			Duel.Hint(HINT_CARD,0,tc2:GetOriginalCode())
-			if tc2:GetType()==(TYPE_SPELL+TYPE_TRAP) then
-				tc2:CancelToGrave(false)
-			end
-			tc2:CreateEffectRelation(te)
-			if cost then cost(te,tep,eg,ep,ev,re,r,rp,1) end
-			if target~=te:GetTarget() then
-				target=te:GetTarget()
-			end
-			if target then target(te,tep,eg,ep,ev,re,r,rp,1) end
-			local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
-			for tg in aux.Next(g) do
-				tg:CreateEffectRelation(te)
-			end
-			tc2:SetStatus(STATUS_ACTIVATED,true)
-			if tc2:IsHasEffect(EFFECT_REMAIN_FIELD) then
-				tc2:SetStatus(STATUS_LEAVE_CONFIRMED,false)
-			end
-			if operation~=te:GetOperation() then
-				operation=te:GetOperation()
-			end
-			if operation then operation(te,tep,eg,ep,ev,re,r,rp) end
-			tc2:ReleaseEffectRelation(te)
-			for tg in aux.Next(g) do
-				tg:ReleaseEffectRelation(te)
-			end
-	else
-		Duel.ChangePosition(tc2,POS_FACEDOWN)
+		tc:RegisterFlagEffect(77238297-2,0,0,1,tc:GetPosition())
+		tc:RegisterFlagEffect(77238297-1,0,0,1,tc:GetControler())
+		tc:RegisterFlagEffect(77238297,0,0,1,tc:GetSequence())
+		tc=g:GetNext()
 	end
-	elseif tc2:IsType(TYPE_SPELL+TYPE_TRAP) and (((not tc2:IsType(TYPE_EQUIP+TYPE_CONTINUOUS+TYPE_FIELD)) and tc2:IsPreviousPosition(POS_FACEUP)) or (tc2:IsType(TYPE_EQUIP+TYPE_CONTINUOUS) and tc2:IsPreviousPosition(POS_FACEDOWN)) or tc2:IsPreviousPosition(POS_FACEDOWN)) and tc2:IsPreviousControler(tp)  then
-	Duel.MoveToField(tc2,tp,tp,LOCATION_SZONE,POS_FACEDOWN,true)
-    end
-    tc2=sg3:GetNext()
-    end
 end
-    local sg4=Duel.GetMatchingGroup(c77238297.filter4,tp,LOCATION_HAND+LOCATION_DECK+LOCATION_ONFIELD+LOCATION_REMOVED+LOCATION_EXTRA,LOCATION_HAND+LOCATION_DECK+LOCATION_ONFIELD+LOCATION_REMOVED+LOCATION_EXTRA,e:GetHandler())
-    if #sg4>0 then
-	local tc3=sg4:GetFirst()
-		while tc3 do
-			local og=tc3:GetOverlayGroup()
-			local tc4=og:GetFirst()
-			while tc4 do
-				if tc4:IsType(TYPE_MONSTER) and tc3:IsPreviousControler(1-tp) and tc4:IsPreviousPosition(POS_FACEUP_ATTACK) then
-					Duel.MoveToField(tc4,1-tp,1-tp,LOCATION_MZONE,POS_FACEUP_ATTACK,true)
-					tc4=og:GetNext()
-				elseif tc4:IsType(TYPE_MONSTER) and tc3:IsPreviousControler(1-tp) and tc4:IsPreviousPosition(POS_FACEUP_DEFENSE) then
-					Duel.MoveToField(tc4,1-tp,1-tp,LOCATION_MZONE,POS_FACEUP_DEFENSE,true)
-				tc4=og:GetNext()
-				elseif tc4:IsType(TYPE_MONSTER) and tc3:IsPreviousControler(tp) and tc4:IsPreviousPosition(POS_FACEUP_ATTACK) then
-					Duel.MoveToField(tc4,tp,tp,LOCATION_MZONE,POS_FACEUP_ATTACK,true)
-				tc4=og:GetNext()
-				elseif tc4:IsType(TYPE_MONSTER) and tc3:IsPreviousControler(tp) and tc4:IsPreviousPosition(POS_FACEUP_DEFENSE) then
-					Duel.MoveToField(tc4,tp,tp,LOCATION_MZONE,POS_FACEUP_DEFENSE,true)
-				tc4=og:GetNext()
-				elseif tc4:IsType(TYPE_SPELL+TYPE_TRAP) and tc3:IsPreviousControler(1-tp) and tc4:IsPreviousLocation(LOCATION_HAND) then
-					Duel.SendtoHand(tc4,1-tp,REASON_RULE)
-				tc4=og:GetNext()
-				elseif tc4:IsType(TYPE_SPELL+TYPE_TRAP) and tc3:IsPreviousControler(1-tp) and tc4:IsPreviousLocation(LOCATION_DECK) then
-					Duel.SendtoDeck(tc4,1-tp,REASON_RULE)
-				tc4=og:GetNext()
-				elseif tc4:IsType(TYPE_SPELL+TYPE_TRAP) and tc3:IsPreviousControler(1-tp) and tc4:IsPreviousLocation(LOCATION_ONFIELD) then
-					Duel.MoveToField(tc4,1-tp,1-tp,LOCATION_SZONE,POS_FACEDOWN,true)
-				tc4=og:GetNext()
-				elseif tc4:IsType(TYPE_SPELL+TYPE_TRAP) and tc3:IsPreviousControler(1-tp) and tc4:IsPreviousLocation(LOCATION_GRAVE) then
-					Duel.SendtoGrave(tc4,REASON_RULE)
-				tc4=og:GetNext()
-				elseif tc4:IsType(TYPE_SPELL+TYPE_TRAP) and tc3:IsPreviousControler(1-tp) and tc4:IsPreviousLocation(LOCATION_REMOVED) then
-					Duel.Remove(tc4,POS_FACEUP,REASON_RULE)
-				tc4=og:GetNext()
-				elseif tc4:IsType(TYPE_SPELL+TYPE_TRAP) and tc3:IsPreviousControler(tp) and tc4:IsPreviousLocation(LOCATION_HAND) then
-					Duel.SendtoHand(tc4,tp,REASON_RULE)
-				tc4=og:GetNext()
-				elseif tc4:IsType(TYPE_SPELL+TYPE_TRAP) and tc3:IsPreviousControler(tp) and tc4:IsPreviousLocation(LOCATION_DECK) then
-					Duel.SendtoDeck(tc4,tp,REASON_RULE)
-				tc4=og:GetNext()
-				elseif tc4:IsType(TYPE_SPELL+TYPE_TRAP) and tc3:IsPreviousControler(tp) and tc4:IsPreviousLocation(LOCATION_ONFIELD) then
-					Duel.MoveToField(tc4,tp,tp,LOCATION_SZONE,POS_FACEDOWN,true)
-				tc4=og:GetNext()
-				elseif tc4:IsType(TYPE_SPELL+TYPE_TRAP) and tc3:IsPreviousControler(tp) and tc4:IsPreviousLocation(LOCATION_GRAVE) then
-					Duel.SendtoGrave(tc4,REASON_RULE)
-				tc4=og:GetNext()
-				elseif tc4:IsType(TYPE_SPELL+TYPE_TRAP) and tc3:IsPreviousControler(tp) and tc4:IsPreviousLocation(LOCATION_REMOVED) then
-					Duel.Remove(tc4,POS_FACEUP,REASON_RULE)
-				tc4=og:GetNext()
-				end
-			end
-			tc3=sg4:GetNext()
-		end
-	Duel.SendtoGrave(sg4,REASON_RULE)
-    end
-    local sg5=Duel.GetMatchingGroup(c77238297.filter5,tp,LOCATION_HAND+LOCATION_DECK+LOCATION_ONFIELD+LOCATION_GRAVE+LOCATION_EXTRA,LOCATION_HAND+LOCATION_DECK+LOCATION_ONFIELD+LOCATION_GRAVE+LOCATION_EXTRA,e:GetHandler())
-    if #sg5>0 then
-		local tc5=sg5:GetFirst()
-		while tc5 do
-			local og=tc5:GetOverlayGroup()
-			local tc6=og:GetFirst()
-			while tc6 do
-				if tc6:IsType(TYPE_MONSTER) and tc5:IsPreviousControler(1-tp) and tc6:IsPreviousPosition(POS_FACEUP_ATTACK) then
-					Duel.MoveToField(tc6,1-tp,1-tp,LOCATION_MZONE,POS_FACEUP_ATTACK,true)
-					tc6=og:GetNext()
-				elseif tc6:IsType(TYPE_MONSTER) and tc5:IsPreviousControler(1-tp) and tc6:IsPreviousPosition(POS_FACEUP_DEFENSE) then
-					Duel.MoveToField(tc6,1-tp,1-tp,LOCATION_MZONE,POS_FACEUP_DEFENSE,true)
-				tc6=og:GetNext()
-				elseif tc6:IsType(TYPE_MONSTER) and tc5:IsPreviousControler(tp) and tc6:IsPreviousPosition(POS_FACEUP_ATTACK) then
-					Duel.MoveToField(tc6,tp,tp,LOCATION_MZONE,POS_FACEUP_ATTACK,true)
-				tc6=og:GetNext()
-				elseif tc6:IsType(TYPE_MONSTER) and tc5:IsPreviousControler(tp) and tc6:IsPreviousPosition(POS_FACEUP_DEFENSE) then
-					Duel.MoveToField(tc6,tp,tp,LOCATION_MZONE,POS_FACEUP_DEFENSE,true)
-				tc6=og:GetNext()
-				elseif tc6:IsType(TYPE_SPELL+TYPE_TRAP) and tc5:IsPreviousControler(1-tp) and tc6:IsPreviousLocation(LOCATION_HAND) then
-					Duel.SendtoHand(tc6,1-tp,REASON_RULE)
-				tc6=og:GetNext()
-				elseif tc6:IsType(TYPE_SPELL+TYPE_TRAP) and tc5:IsPreviousControler(1-tp) and tc6:IsPreviousLocation(LOCATION_DECK) then
-					Duel.SendtoDeck(tc6,1-tp,REASON_RULE)
-				tc6=og:GetNext()
-				elseif tc6:IsType(TYPE_SPELL+TYPE_TRAP) and tc5:IsPreviousControler(1-tp) and tc6:IsPreviousLocation(LOCATION_ONFIELD) then
-					Duel.MoveToField(tc6,1-tp,1-tp,LOCATION_SZONE,POS_FACEDOWN,true)
-				tc6=og:GetNext()
-				elseif tc6:IsType(TYPE_SPELL+TYPE_TRAP) and tc5:IsPreviousControler(1-tp) and tc6:IsPreviousLocation(LOCATION_GRAVE) then
-					Duel.SendtoGrave(tc6,REASON_RULE)
-				tc6=og:GetNext()
-				elseif tc6:IsType(TYPE_SPELL+TYPE_TRAP) and tc5:IsPreviousControler(1-tp) and tc6:IsPreviousLocation(LOCATION_REMOVED) then
-					Duel.Remove(tc6,POS_FACEUP,REASON_RULE)
-				tc6=og:GetNext()
-				elseif tc6:IsType(TYPE_SPELL+TYPE_TRAP) and tc5:IsPreviousControler(tp) and tc6:IsPreviousLocation(LOCATION_HAND) then
-					Duel.SendtoHand(tc6,tp,REASON_RULE)
-				tc6=og:GetNext()
-				elseif tc6:IsType(TYPE_SPELL+TYPE_TRAP) and tc5:IsPreviousControler(tp) and tc6:IsPreviousLocation(LOCATION_DECK) then
-					Duel.SendtoDeck(tc6,tp,REASON_RULE)
-				tc6=og:GetNext()
-				elseif tc6:IsType(TYPE_SPELL+TYPE_TRAP) and tc5:IsPreviousControler(tp) and tc6:IsPreviousLocation(LOCATION_ONFIELD) then
-					Duel.MoveToField(tc6,tp,tp,LOCATION_SZONE,POS_FACEDOWN,true)
-				tc6=og:GetNext()
-				elseif tc6:IsType(TYPE_SPELL+TYPE_TRAP) and tc5:IsPreviousControler(tp) and tc6:IsPreviousLocation(LOCATION_GRAVE) then
-					Duel.SendtoGrave(tc6,REASON_RULE)
-				tc6=og:GetNext()
-				elseif tc6:IsType(TYPE_SPELL+TYPE_TRAP) and tc5:IsPreviousControler(tp) and tc6:IsPreviousLocation(LOCATION_REMOVED) then
-					Duel.Remove(tc6,POS_FACEUP,REASON_RULE)
-				tc6=og:GetNext()
-				end
-			end
-			tc5=sg5:GetNext()
-		end
-	Duel.Remove(sg5,nil,REASON_RULE)
-    end
-    local sg6=Duel.GetMatchingGroup(c77238297.filter6,tp,LOCATION_HAND+LOCATION_ONFIELD+LOCATION_GRAVE+LOCATION_REMOVED,LOCATION_HAND+LOCATION_ONFIELD+LOCATION_GRAVE+LOCATION_REMOVED,e:GetHandler())
-    if #sg6>0 then
-	local tc7=sg6:GetFirst()
-	while tc7 do
-		local og=tc7:GetOverlayGroup()
-		local tc8=og:GetFirst()
-		while tc8 do
-			if tc8:IsType(TYPE_MONSTER) and tc7:IsPreviousControler(1-tp) and tc8:IsPreviousPosition(POS_FACEUP_ATTACK) then
-				Duel.MoveToField(tc8,1-tp,1-tp,LOCATION_MZONE,POS_FACEUP_ATTACK,true)
-				tc8=og:GetNext()
-			elseif tc8:IsType(TYPE_MONSTER) and tc7:IsPreviousControler(1-tp) and tc8:IsPreviousPosition(POS_FACEUP_DEFENSE) then
-				Duel.MoveToField(tc8,1-tp,1-tp,LOCATION_MZONE,POS_FACEUP_DEFENSE,true)
-			tc8=og:GetNext()
-			elseif tc8:IsType(TYPE_MONSTER) and tc7:IsPreviousControler(tp) and tc8:IsPreviousPosition(POS_FACEUP_ATTACK) then
-				Duel.MoveToField(tc8,tp,tp,LOCATION_MZONE,POS_FACEUP_ATTACK,true)
-			tc8=og:GetNext()
-			elseif tc8:IsType(TYPE_MONSTER) and tc7:IsPreviousControler(tp) and tc8:IsPreviousPosition(POS_FACEUP_DEFENSE) then
-				Duel.MoveToField(tc8,tp,tp,LOCATION_MZONE,POS_FACEUP_DEFENSE,true)
-			tc8=og:GetNext()
-			elseif tc8:IsType(TYPE_SPELL+TYPE_TRAP) and tc7:IsPreviousControler(1-tp) and tc8:IsPreviousLocation(LOCATION_HAND) then
-				Duel.SendtoHand(tc8,1-tp,REASON_RULE)
-			tc8=og:GetNext()
-			elseif tc8:IsType(TYPE_SPELL+TYPE_TRAP) and tc7:IsPreviousControler(1-tp) and tc8:IsPreviousLocation(LOCATION_DECK) then
-				Duel.SendtoDeck(tc8,1-tp,REASON_RULE)
-			tc8=og:GetNext()
-			elseif tc8:IsType(TYPE_SPELL+TYPE_TRAP) and tc7:IsPreviousControler(1-tp) and tc8:IsPreviousLocation(LOCATION_ONFIELD) then
-				Duel.MoveToField(tc8,1-tp,1-tp,LOCATION_SZONE,POS_FACEDOWN,true)
-			tc8=og:GetNext()
-			elseif tc8:IsType(TYPE_SPELL+TYPE_TRAP) and tc7:IsPreviousControler(1-tp) and tc8:IsPreviousLocation(LOCATION_GRAVE) then
-				Duel.SendtoGrave(tc8,REASON_RULE)
-			tc8=og:GetNext()
-			elseif tc8:IsType(TYPE_SPELL+TYPE_TRAP) and tc7:IsPreviousControler(1-tp) and tc8:IsPreviousLocation(LOCATION_REMOVED) then
-				Duel.Remove(tc8,POS_FACEUP,REASON_RULE)
-			tc8=og:GetNext()
-			elseif tc8:IsType(TYPE_SPELL+TYPE_TRAP) and tc7:IsPreviousControler(tp) and tc8:IsPreviousLocation(LOCATION_HAND) then
-				Duel.SendtoHand(tc8,tp,REASON_RULE)
-			tc8=og:GetNext()
-			elseif tc8:IsType(TYPE_SPELL+TYPE_TRAP) and tc7:IsPreviousControler(tp) and tc8:IsPreviousLocation(LOCATION_DECK) then
-				Duel.SendtoDeck(tc8,tp,REASON_RULE)
-			tc8=og:GetNext()
-			elseif tc8:IsType(TYPE_SPELL+TYPE_TRAP) and tc7:IsPreviousControler(tp) and tc8:IsPreviousLocation(LOCATION_ONFIELD) then
-				Duel.MoveToField(tc8,tp,tp,LOCATION_SZONE,POS_FACEDOWN,true)
-			tc8=og:GetNext()
-			elseif tc8:IsType(TYPE_SPELL+TYPE_TRAP) and tc7:IsPreviousControler(tp) and tc8:IsPreviousLocation(LOCATION_GRAVE) then
-				Duel.SendtoGrave(tc8,REASON_RULE)
-			tc8=og:GetNext()
-			elseif tc8:IsType(TYPE_SPELL+TYPE_TRAP) and tc7:IsPreviousControler(tp) and tc8:IsPreviousLocation(LOCATION_REMOVED) then
-				Duel.Remove(tc8,POS_FACEUP,REASON_RULE)
-			tc8=og:GetNext()
-			end
-		end
-		tc7=sg6:GetNext()
-	end
-	Duel.SendtoDeck(sg6,nil,0,REASON_RULE)
-end
-local sg7=Duel.GetMatchingGroup(c77238297.filter7,tp,LOCATION_HAND,0,e:GetHandler())
-    if #sg7>0 then
-		Duel.SendtoDeck(sg7,nil,0,REASON_RULE)
-    end
-return end
