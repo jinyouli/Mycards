@@ -105,9 +105,9 @@ end
 function c900000081.mtop(e, tp, eg, ep, ev, re, r, rp)
     local c = e:GetHandler()
     if not c:IsFaceup() or not c:IsLocation(LOCATION_MZONE) then return end -- 再次检查自身状态
-    
-    local g = Duel.GetMatchingGroup(Card.IsType, 1 - tp, LOCATION_SZONE, 0, nil) -- 获取对方场上所有魔法/陷阱区的卡
+
+	local g = Duel.GetMatchingGroup(Card.IsType, 1 - tp, LOCATION_ONFIELD, 0, nil, TYPE_SPELL + TYPE_TRAP)
     if #g > 0 then
-        Duel.Destroy(g, REASON_EFFECT) -- 破坏这些卡
+        Duel.Destroy(g, REASON_EFFECT)
     end
 end
