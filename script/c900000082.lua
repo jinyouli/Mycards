@@ -15,6 +15,7 @@ function c900000082.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCountLimit(1)
+	e1:SetCost(c900000082.spcost)
 	e1:SetTarget(c900000082.sptg)
 	e1:SetOperation(c900000082.spop)
 	c:RegisterEffect(e1)
@@ -37,6 +38,12 @@ function c900000082.initial_effect(c)
 	e3:SetValue(ATTRIBUTE_DARK)
 	c:RegisterEffect(e3)
 end
+
+function c900000082.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return e:GetHandler():IsReleasable() end
+	Duel.Release(e:GetHandler(),REASON_COST)
+end
+
 ---------------------------------------------------------------
 function c900000082.filter(c,e,tp)
 	return c:IsType(TYPE_MONSTER) and c:IsCanBeSpecialSummoned(e,0,tp,true,true)
@@ -66,17 +73,6 @@ function c900000082.spop(e,tp,eg,ep,ev,re,r,rp)
 			local c=e:GetHandler()
 			c:CancelToGrave()
 			Duel.Overlay(tc,Group.FromCards(c))
-		else
-			local e1=Effect.CreateEffect(c)
-			e1:SetCategory(CATEGORY_TOHAND)
-			e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
-			e1:SetCode(EVENT_PHASE+PHASE_END)
-			e1:SetRange(LOCATION_MZONE)
-			e1:SetCountLimit(1)		
-			e1:SetTarget(c900000082.rettg)
-			e1:SetOperation(c900000082.retop)
-			e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-			c:RegisterEffect(e1)
 		end	
 	end
 end
