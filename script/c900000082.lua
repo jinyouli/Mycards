@@ -27,6 +27,15 @@ function c900000082.initial_effect(c)
     e2:SetRange(LOCATION_MZONE)
     e2:SetValue(c900000082.efilter)
     c:RegisterEffect(e2)
+
+	--Attribute Dark
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_SINGLE)
+	e3:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e3:SetCode(EFFECT_ADD_ATTRIBUTE)
+	e3:SetRange(LOCATION_MZONE)
+	e3:SetValue(ATTRIBUTE_DARK)
+	c:RegisterEffect(e3)
 end
 ---------------------------------------------------------------
 function c900000082.filter(c,e,tp)
