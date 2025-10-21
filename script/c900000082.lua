@@ -1,4 +1,4 @@
---万物创始之雏(Z)
+--万物创始龙
 function c900000082.initial_effect(c)
 	--special summon
 	local e0=Effect.CreateEffect(c)
