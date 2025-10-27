@@ -47,7 +47,7 @@ function c77240222.activate(e,tp,eg,ep,ev,re,r,rp)
 	   if Duel.SendtoHand(g,nil,REASON_EFFECT)~=0 and Duel.ConfirmCards(1-tp,g)~=0 then
 		Duel.BreakEffect()
 		c:CancelToGrave()
-		Duel.SendtoDeck(c,nil,1,REASON_EFFECT)
+		Duel.SendtoHand(c,nil,1,REASON_EFFECT)
 		Duel.ShuffleDeck(c:GetControler())
 	 end
 	end
