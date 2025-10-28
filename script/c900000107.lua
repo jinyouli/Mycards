@@ -1,4 +1,4 @@
---スライム増殖炉
+--スライム
 local s, id = GetID()
 function s.initial_effect(c)
 	--Activate
@@ -12,21 +12,23 @@ function s.initial_effect(c)
     e1:SetType(EFFECT_TYPE_FIELD + EFFECT_TYPE_CONTINUOUS)
     e1:SetCode(EVENT_TO_GRAVE)
     e1:SetRange(LOCATION_SZONE) -- 效果在魔法与陷阱区域生效
-    e1:SetCondition(s.spcon)
-    e1:SetOperation(s.spop)
+    e1:SetOperation(s.regop)
     c:RegisterEffect(e1)
+
+    local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(5043010,1))
+	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
+	e2:SetCode(EVENT_CUSTOM+id)
+	e2:SetRange(LOCATION_SZONE)
+	e2:SetOperation(s.spop)
+	c:RegisterEffect(e2)
 end
 
--- 条件检查函数：检查是否是我方怪兽从场上被送去墓地
-function s.spcon(e, tp, eg, ep, ev, re, r, rp)
-    -- 遍历所有被送去墓地的卡
-    for tc in aux.Next(eg) do
-        -- 如果是怪兽、是我方控制、之前在场上的位置（怪兽区或魔法陷阱区，但通常是怪兽区）
-        if tc:IsPreviousLocation(LOCATION_ONFIELD) and tc:IsControler(tp) and tc:IsType(TYPE_MONSTER) then
-            return true
-        end
-    end
-    return false
+function s.regop(e,tp,eg,ep,ev,re,r,rp)
+    egc=eg	
+    Duel.RaiseSingleEvent(e:GetHandler(),EVENT_CUSTOM+id,e,0,tp,eg,0)
 end
 
 -- 效果处理函数：特殊召唤符合条件的怪兽
@@ -35,7 +37,7 @@ function s.spop(e, tp, eg, ep, ev, re, r, rp)
     -- 检查永续魔法卡本身是否在场上表侧表示存在
     if not c:IsFaceup() or not c:IsLocation(LOCATION_SZONE) then return end
 
-    local g = eg:Filter(s.spfilter, nil, tp)
+    local g = egc:Filter(s.spfilter, nil, tp)
     if #g > 0 then
         for tc in aux.Next(g) do
             -- 检查怪兽是否在墓地且可以被特殊召唤
