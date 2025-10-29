@@ -22,14 +22,20 @@ function s.initial_effect(c)
 end
 
 function s.filter(c)
-	return c:IsFaceup()
+	return c:IsType(TYPE_MONSTER) and not c:IsType(TYPE_TOKEN)
 end
 
 -- 效果的目标处理函数（检查发动条件）
 function s.tktg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+
+    -- 检查我方场上是否存在非衍生物怪兽
+    local myFieldExists = Duel.IsExistingTarget(s.filter, 0, LOCATION_MZONE, 0, 1, nil)
+    -- 检查对方场上是否存在非衍生物怪兽
+    local oppFieldExists = Duel.IsExistingTarget(s.filter, 1, LOCATION_MZONE, 0, 1, nil)
+
     if chk==0 then
         -- 检查场上是否有表侧表示怪兽
-        return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 -- 至少有一个可用的主怪兽区域格子
+        return (myFieldExists or oppFieldExists) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 -- 至少有一个可用的主怪兽区域格子
     end
     Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
     -- 选择对方或我方场上一只表侧怪兽作为对象
