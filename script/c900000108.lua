@@ -29,8 +29,7 @@ end
 function s.tktg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
     if chk==0 then
         -- 检查场上是否有表侧表示怪兽
-        return Duel.IsExistingMatchingCard(s.filter,e:GetHandlerPlayer(),LOCATION_MZONE,0,1,nil)
-               and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 -- 至少有一个可用的主怪兽区域格子
+        return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 -- 至少有一个可用的主怪兽区域格子
     end
     Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
     -- 选择对方或我方场上一只表侧怪兽作为对象
@@ -49,23 +48,21 @@ function s.tkop(e,tp,eg,ep,ev,re,r,rp)
     if not c:IsRelateToEffect(e) or not tc or not tc:IsRelateToEffect(e) or tc:IsFacedown() then
         return
     end
-
-    local tokenCount = 1
-
     -- 获取目标怪兽的原始信息
     local code = tc:GetOriginalCode()
     local originalRace = tc:GetOriginalRace()
     local originalAttribute = tc:GetOriginalAttribute()
     local originalLevel = tc:GetOriginalLevel()
-    -- local originalAttack = tc:GetOriginalAttack()
-    -- local originalDefense = tc:GetOriginalDefense()
-    local originalAttack = 1000
-    local originalDefense = 1000
+    local originalAttack = tc:GetBaseAttack()
+    local originalDefense = tc:GetBaseDefense()
 
-    -- 循环特殊召唤每一个衍生物
-    for i=1, tokenCount do
-        local token = Duel.CreateToken(tp, 900000109) -- 创建指定Code的Token（会复制卡名）
-        -- 使用效果设置Token的原始属性（因为Token默认是通常怪兽，需要修改其原始数据）
+    local ft=5
+	ft=math.min(ft,(Duel.GetLocationCount(tp,LOCATION_MZONE)))
+	if ft<=0 then return end
+	repeat
+		local token=Duel.CreateToken(tp,900000109)
+		Duel.SpecialSummonStep(token,0,tp,tp,false,false,POS_FACEUP)
+
         local e1 = Effect.CreateEffect(c)
         e1:SetType(EFFECT_TYPE_SINGLE)
         e1:SetCode(EFFECT_SET_BASE_ATTACK)
@@ -112,6 +109,8 @@ function s.tkop(e,tp,eg,ep,ev,re,r,rp)
         e6:SetValue(code)
         e6:SetReset(RESET_EVENT+RESETS_STANDARD)
         token:RegisterEffect(e6)
-    end
+
+		ft=ft-1
+	until ft<=0 or not Duel.SelectYesNo(tp,aux.Stringid(123111,2))
     Duel.SpecialSummonComplete()
 end
