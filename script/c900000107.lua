@@ -12,6 +12,7 @@ function s.initial_effect(c)
     e1:SetType(EFFECT_TYPE_FIELD + EFFECT_TYPE_CONTINUOUS)
     e1:SetCode(EVENT_TO_GRAVE)
     e1:SetRange(LOCATION_SZONE) -- 效果在魔法与陷阱区域生效
+    e1:SetCondition(s.spcon)
     e1:SetOperation(s.regop)
     c:RegisterEffect(e1)
 
@@ -24,6 +25,18 @@ function s.initial_effect(c)
 	e2:SetRange(LOCATION_SZONE)
 	e2:SetOperation(s.spop)
 	c:RegisterEffect(e2)
+end
+
+-- 条件检查函数：检查是否是我方怪兽从场上被送去墓地
+function s.spcon(e, tp, eg, ep, ev, re, r, rp)
+    -- 遍历所有被送去墓地的卡
+    for tc in aux.Next(eg) do
+        -- 如果是怪兽、是我方控制、之前在场上的位置（怪兽区或魔法陷阱区，但通常是怪兽区）
+        if tc:IsPreviousLocation(LOCATION_ONFIELD) and tc:IsControler(tp) and tc:IsType(TYPE_MONSTER) then
+            return true
+        end
+    end
+    return false
 end
 
 function s.regop(e,tp,eg,ep,ev,re,r,rp)
