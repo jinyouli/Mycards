@@ -36,7 +36,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 	 --Activate
 	local e1=Effect.CreateEffect(c)
-	e1:SetProperty(EFFECT_FLAG_CANNOT_INACTIVATE+EFFECT_FLAG_CANNOT_NEGATE) 
+	e1:SetProperty(EFFECT_FLAG_CANNOT_INACTIVATE) 
 	e1:SetCategory(CATEGORY_EQUIP)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)

@@ -1,7 +1,7 @@
 --No.93六芒星之神 巨龙神(ZCG)
 function c77239400.initial_effect(c)
 	--xyz summon
-	Xyz.AddProcedure(c,nil,12,2)
+	aux.AddXyzProcedure(c,nil,12,2)
 	c:EnableReviveLimit()   
 
 	--不能直接攻击
