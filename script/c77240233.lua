@@ -2,9 +2,8 @@
 function c77240233.initial_effect(c)
 	 --fusion material
 	c:EnableReviveLimit()
-	aux.AddFusionProcCode2(c,c77240233.filter1,c77240233.ffilter,true,true)
-	aux.AddContactFusionProcedure(c,Card.IsAbleToGraveAsCost,LOCATION_ONFIELD+LOCATION_HAND,0,Duel.SendtoGrave,POS_FACEUP,REASON_COST)
-
+	Fusion.AddProcMixN(c,true,true,c77240233.filter1,1,c77240233.ffilter,1)
+	Fusion.AddContactProc(c,c77240233.contactfil,c77240233.contactop,c77240233.splimit,nil,nil,nil,false)
 	--spsummon condition
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
@@ -38,6 +37,13 @@ function c77240233.filter1(c,fc,sub,sub2,mg,sg)
 end
 function c77240233.ffilter(c,fc,sub,sub2,mg,sg)
 	return c:IsCode(77239401) or c:IsCode(77240238) or c:IsCode(77239405) or c:IsCode(77239402) or c:IsCode(77239406) or c:IsCode(77239404) or c:IsCode(77239403)
+end
+function c77240233.contactfil(tp)
+	return Duel.GetMatchingGroup(Card.IsAbleToGraveAsCost,tp,LOCATION_ONFIELD+LOCATION_HAND,0,nil)
+end
+function c77240233.contactop(g,tp)
+	Duel.ConfirmCards(1-tp,g)
+	Duel.SendtoGrave(g,REASON_COST+REASON_MATERIAL)
 end
 function c77240233.splimit(e,se,sp,st)
 	return (st&SUMMON_TYPE_FUSION)==SUMMON_TYPE_FUSION
