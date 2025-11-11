@@ -1,4 +1,4 @@
---ラーの翼神竜WCS効果
+--ラーの翼神竜
 --The Winged Dragon of Ra (VG)
 local s,id=GetID()
 function s.initial_effect(c)
@@ -19,8 +19,6 @@ function s.initial_effect(c)
 	e2:SetCondition(s.setcon)
 	c:RegisterEffect(e2)
 
-
-
 	--summon
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE)
@@ -33,7 +31,6 @@ function s.initial_effect(c)
 	e4:SetCode(EVENT_SUMMON_SUCCESS)
 	e4:SetOperation(s.sumsuc)
 	c:RegisterEffect(e4)
-
 
 	--to grave
 	local e6=Effect.CreateEffect(c)
@@ -49,7 +46,6 @@ function s.initial_effect(c)
 	e6:SetOperation(s.tgop)
 	c:RegisterEffect(e6)
 
-
 	--tribute check
 	local e7=Effect.CreateEffect(c)
 	e7:SetType(EFFECT_TYPE_SINGLE)
@@ -64,8 +60,7 @@ function s.initial_effect(c)
 	e8:SetLabelObject(e7)
 	c:RegisterEffect(e8)
 
-
-	--破坏
+	--送墓
 	local e9=Effect.CreateEffect(c)
     e9:SetDescription(aux.Stringid(77240070,1))
 	e9:SetCategory(CATEGORY_DESTROY)
@@ -75,7 +70,6 @@ function s.initial_effect(c)
 	e9:SetTarget(s.target)
 	e9:SetOperation(s.operation)
 	c:RegisterEffect(e9)
-
 
 	--pay atk/def
 	local e10=Effect.CreateEffect(c)
@@ -98,7 +92,6 @@ function s.initial_effect(c)
 	e11:SetOperation(s.atkop)
 	c:RegisterEffect(e11)
 
-
 	--unaffectable
 	local e12=Effect.CreateEffect(c)
 	e12:SetType(EFFECT_TYPE_SINGLE)
@@ -107,7 +100,6 @@ function s.initial_effect(c)
 	e12:SetCode(EFFECT_IMMUNE_EFFECT)
 	e12:SetValue(s.efilter)
 	c:RegisterEffect(e12)
-
 end
 
 function s.efilter(e,te)
@@ -187,7 +179,6 @@ function s.sumsuc(e,tp,eg,ep,ev,re,r,rp)
 	Duel.SetChainLimitTillChainEnd(aux.FALSE)
 end
 
-
 function s.valcheck(e,c)
 	local g=c:GetMaterial()
 	local tc=g:GetFirst()
@@ -259,5 +250,5 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
     local sg=Duel.GetMatchingGroup(aux.TRUE,tp,0,LOCATION_MZONE,nil)
-    Duel.Destroy(sg,REASON_EFFECT)
+	Duel.SendtoGrave(sg,REASON_EFFECT)
 end
