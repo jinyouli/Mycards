@@ -2,6 +2,7 @@
 function c123110.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(123110,0))
 	e1:SetCategory(CATEGORY_POSITION)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
@@ -9,11 +10,24 @@ function c123110.initial_effect(c)
 	e1:SetOperation(c123110.activate)
 	c:RegisterEffect(e1)
 
+	--Activate
+	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(123110,0))
+	e2:SetCategory(CATEGORY_TODECK)
+	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e2:SetType(EFFECT_TYPE_ACTIVATE)
+	e2:SetCode(EVENT_FREE_CHAIN)
+	e2:SetHintTiming(TIMING_END_PHASE)
+	e2:SetCondition(c123110.condition)
+	e2:SetTarget(c123110.target)
+	e2:SetOperation(c123110.activate)
+	c:RegisterEffect(e2)
+
 	if not c123110.global_check then
 		c123110.global_check=true
 		local ge1=Effect.CreateEffect(c)
 		ge1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		ge1:SetCode(EVENT_PHASE+PHASE_END)
+		ge1:SetCode(EVENT_PHASE+PHASE_STANDBY)
 		ge1:SetCountLimit(1)
 		ge1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE)
 		ge1:SetOperation(c123110.chkop)
@@ -21,6 +35,11 @@ function c123110.initial_effect(c)
 		
 	end
 end
+
+function c123110.condition(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetCurrentPhase()==PHASE_END
+end
+
 function c123110.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return Duel.IsExistingMatchingCard(c123110.fil2,tp,LOCATION_MZONE+LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE+LOCATION_REMOVED+LOCATION_EXTRA,LOCATION_MZONE+LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE+LOCATION_REMOVED+LOCATION_EXTRA+LOCATION_FZONE+LOCATION_SZONE,1,nil) or Duel.IsExistingMatchingCard(c123110.fil,tp,0xff,0xff,1,nil) end
