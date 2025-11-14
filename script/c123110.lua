@@ -7,6 +7,7 @@ function c123110.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetTarget(c123110.target)
+	e1:SetCondition(c123110.condition1)
 	e1:SetOperation(c123110.activate)
 	c:RegisterEffect(e1)
 
@@ -32,8 +33,11 @@ function c123110.initial_effect(c)
 		ge1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_IGNORE_IMMUNE)
 		ge1:SetOperation(c123110.chkop)
 		Duel.RegisterEffect(ge1,0)
-		
 	end
+end
+
+function c123110.condition1(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetCurrentPhase()~=PHASE_END
 end
 
 function c123110.condition(e,tp,eg,ep,ev,re,r,rp)
