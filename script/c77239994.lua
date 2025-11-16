@@ -110,13 +110,7 @@ function c77239994.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if tc then
 		Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP)
-		local e1=Effect.CreateEffect(c)
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_INDESTRUCTABLE_COUNT)
-		e1:SetCountLimit(2)
-		e1:SetValue(1)
-		e1:SetReset(RESET_EVENT+0x1fe0000)
-		tc:RegisterEffect(e1)
+
 		--immune
 		local e2=Effect.CreateEffect(e:GetHandler())
 		e2:SetType(EFFECT_TYPE_SINGLE)
@@ -125,13 +119,33 @@ function c77239994.spop(e,tp,eg,ep,ev,re,r,rp)
 		e2:SetReset(RESET_EVENT+0x1fe0000)
 		tc:RegisterEffect(e2)
 
-		local e3=Effect.CreateEffect(e:GetHandler())
-		e3:SetType(EFFECT_TYPE_SINGLE)
-		e3:SetCode(EFFECT_CANNOT_BE_BATTLE_TARGET)
-		e3:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
-		e3:SetRange(LOCATION_MZONE)
-		e3:SetValue(aux.imval1)
-		tc:RegisterEffect(e3)
+		if tc:GetCode() ~= 511000252 or 
+		tc:GetCode() ~= 77238013 or 
+		tc:GetCode() ~= 77238022 or 
+		tc:GetCode() ~= 69931927 or
+		tc:GetCode() ~= 33537328 or
+		tc:GetCode() ~= 79798060 or
+		tc:GetCode() ~= 10875327 or
+		tc:GetCode() ~= 41181774 or
+		tc:GetCode() ~= 77238010 or
+		tc:GetCode() ~= 46263076 then 
+			local e3=Effect.CreateEffect(e:GetHandler())
+			e3:SetType(EFFECT_TYPE_SINGLE)
+			e3:SetCode(EFFECT_CANNOT_BE_BATTLE_TARGET)
+			e3:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+			e3:SetRange(LOCATION_MZONE)
+			e3:SetValue(aux.imval1)
+			tc:RegisterEffect(e3)
+		else
+			local e1=Effect.CreateEffect(c)
+			e1:SetType(EFFECT_TYPE_SINGLE)
+			e1:SetCode(EFFECT_INDESTRUCTABLE_COUNT)
+			e1:SetCountLimit(2)
+			e1:SetValue(1)
+			e1:SetReset(RESET_EVENT+0x1fe0000)
+			tc:RegisterEffect(e1)
+		end
+
 		Duel.SpecialSummonComplete()
 	end
 end
