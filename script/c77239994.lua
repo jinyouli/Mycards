@@ -111,6 +111,14 @@ function c77239994.spop(e,tp,eg,ep,ev,re,r,rp)
 	if tc then
 		Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP)
 
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_INDESTRUCTABLE_COUNT)
+		e1:SetCountLimit(2)
+		e1:SetValue(1)
+		e1:SetReset(RESET_EVENT+0x1fe0000)
+		tc:RegisterEffect(e1)
+
 		--immune
 		local e2=Effect.CreateEffect(e:GetHandler())
 		e2:SetType(EFFECT_TYPE_SINGLE)
@@ -136,14 +144,6 @@ function c77239994.spop(e,tp,eg,ep,ev,re,r,rp)
 			e3:SetRange(LOCATION_MZONE)
 			e3:SetValue(aux.imval1)
 			tc:RegisterEffect(e3)
-		else
-			local e1=Effect.CreateEffect(c)
-			e1:SetType(EFFECT_TYPE_SINGLE)
-			e1:SetCode(EFFECT_INDESTRUCTABLE_COUNT)
-			e1:SetCountLimit(2)
-			e1:SetValue(1)
-			e1:SetReset(RESET_EVENT+0x1fe0000)
-			tc:RegisterEffect(e1)
 		end
 
 		Duel.SpecialSummonComplete()
