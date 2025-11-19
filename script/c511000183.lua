@@ -51,7 +51,7 @@ function c511000183.initial_effect(c)
 end
 c511000183.xyz_number=23
 function c511000183.condition(e,tp,eg,ep,ev,re,r,rp)
-	return ep~=tp and Duel.GetAttackTarget()==nil and e:GetHandler():GetOverlayCount()>0
+	return ep~=tp and Duel.GetAttackTarget()==nil
 end
 function c511000183.filter(c,atk)
 	return c:IsFaceup() and c:GetAttack()<=atk and c:IsDestructable()
