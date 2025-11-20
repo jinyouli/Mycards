@@ -24,33 +24,22 @@ end
 
 -- 效果的目标处理函数（检查发动条件）
 function s.tktg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-
-    -- 检查我方场上是否存在非衍生物怪兽
-    local myFieldExists = Duel.IsExistingTarget(s.filter, 0, LOCATION_MZONE, 0, 1, nil)
-    -- 检查对方场上是否存在非衍生物怪兽
-    local oppFieldExists = Duel.IsExistingTarget(s.filter, 1, LOCATION_MZONE, 0, 1, nil)
-
-    if chk==0 then
-        -- 检查场上是否有表侧表示怪兽
-        return (myFieldExists or oppFieldExists) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 -- 至少有一个可用的主怪兽区域格子
+    if chk == 0 then
+        -- 检查双方场上是否存在可获得的表侧表示怪兽
+        return Duel.IsExistingMatchingCard(s.filter, tp, 0, LOCATION_MZONE, 1, nil) or
+               Duel.IsExistingMatchingCard(s.filter, tp, LOCATION_MZONE, 0, 1, nil)
     end
     Duel.SetOperationInfo(0, CATEGORY_CONTROL, nil, 1, 0, 0)
 end
 
 function s.tkop(e,tp,eg,ep,ev,re,r,rp)
+    local g=Duel.GetMatchingGroup(s.filter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
+	if g:GetCount()>0 then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
+        local tc=g:Select(tp,1,1,nil):GetFirst()
 
-    Duel.Hint(HINT_SELECTMSG, tp, HINTMSG_CONTROL)
-    local g = Duel.GetMatchingGroup(s.filter, tp, LOCATION_MZONE, LOCATION_MZONE, nil)
-    
-    if g:GetCount() > 0 then
-        -- 让玩家选择一只怪兽
-        local tc = g:Select(tp, 1, 1, nil):GetFirst()
         local c = e:GetHandler()
-        if not c:IsRelateToEffect(e) or not tc or not tc:IsRelateToEffect(e) or tc:IsFacedown() then
-            return
-        end
-        -- 获取目标怪兽的原始信息
-        local code = tc:GetOriginalCode()
+		local code = tc:GetOriginalCode()
         local originalRace = tc:GetOriginalRace()
         local originalAttribute = tc:GetOriginalAttribute()
         local originalLevel = tc:GetOriginalLevel()
@@ -114,6 +103,5 @@ function s.tkop(e,tp,eg,ep,ev,re,r,rp)
             ft=ft-1
         until ft<=0 or not Duel.SelectYesNo(tp,aux.Stringid(123111,2))
         Duel.SpecialSummonComplete()
-        
-    end
+	end
 end
