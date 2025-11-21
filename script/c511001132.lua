@@ -1,8 +1,5 @@
 -- 海市蜃楼的支配者
-
-local s, id = GetID()
-
-function s.initial_effect(c)
+function c511001132.initial_effect(c)
     -- 激活后作为永续陷阱在场上存在
     local e1 = Effect.CreateEffect(c)
     e1:SetType(EFFECT_TYPE_ACTIVATE)
@@ -10,32 +7,30 @@ function s.initial_effect(c)
     c:RegisterEffect(e1)
     
     --destroy spsummon
-    local e3=Effect.CreateEffect(c)
-    e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
-    e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
-    e3:SetCode(EVENT_DESTROYED)
-    e3:SetRange(LOCATION_SZONE)
-    e3:SetCondition(c511001132.spcon1)
-    e3:SetOperation(c511001132.spop)
-    c:RegisterEffect(e3)
-
+    local e2=Effect.CreateEffect(c)
+    e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
+    e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
+    e2:SetCode(EVENT_DESTROYED)
+    e2:SetRange(LOCATION_SZONE)
+    e2:SetCondition(c511001132.spcon1)
+    e2:SetOperation(c511001132.spop)
+    c:RegisterEffect(e2)
 
     --destroy
-	local e4=Effect.CreateEffect(c)
-	e4:SetCategory(CATEGORY_DESTROY)
-	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e4:SetCode(EVENT_PHASE+PHASE_BATTLE_START)
-	e4:SetRange(LOCATION_SZONE)
-	e4:SetCountLimit(1)
-	e4:SetOperation(c511001132.daop)
-	c:RegisterEffect(e4)
+	local e3=Effect.CreateEffect(c)
+	e3:SetCategory(CATEGORY_DESTROY)
+	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e3:SetCode(EVENT_PHASE+PHASE_BATTLE_START)
+	e3:SetRange(LOCATION_SZONE)
+	e3:SetCountLimit(1)
+	e3:SetOperation(c511001132.daop)
+	c:RegisterEffect(e3)
 
-    s.pre_damage_lp = 8000
-    
+    c511001132.pre_damage_lp = 8000
 end
 
 function c511001132.daop(e,tp,eg,ep,ev,re,r,rp)
-    s.pre_damage_lp = Duel.GetLP(p)
+    c511001132.pre_damage_lp = Duel.GetLP(p)
 end
 
 function c511001132.filter1(c,e,tp)
@@ -63,8 +58,8 @@ function c511001132.spop(e,tp,eg,ep,ev,re,r,rp)
     end
 
     local current_lp = Duel.GetLP(p)
-    if current_lp < s.pre_damage_lp then
-        Duel.Recover(p, s.pre_damage_lp - current_lp, REASON_EFFECT)
+    if current_lp < c511001132.pre_damage_lp then
+        Duel.Recover(p, c511001132.pre_damage_lp - current_lp, REASON_EFFECT)
     end
 
 end
