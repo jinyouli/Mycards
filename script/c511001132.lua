@@ -26,7 +26,7 @@ function c511001132.initial_effect(c)
 	e3:SetOperation(c511001132.daop)
 	c:RegisterEffect(e3)
 
-    c511001132.pre_damage_lp = 8000
+    c511001132.pre_damage_lp = 0
 end
 
 function c511001132.daop(e,tp,eg,ep,ev,re,r,rp)
@@ -57,11 +57,13 @@ function c511001132.spop(e,tp,eg,ep,ev,re,r,rp)
         end
     end
 
-    local current_lp = Duel.GetLP(p)
-    if current_lp < c511001132.pre_damage_lp then
-        Duel.Recover(p, c511001132.pre_damage_lp - current_lp, REASON_EFFECT)
+    local ph=Duel.GetCurrentPhase()
+    if ph>=PHASE_BATTLE_START and ph<=PHASE_BATTLE then
+        local current_lp = Duel.GetLP(p)
+        if current_lp < c511001132.pre_damage_lp then
+            Duel.Recover(p, c511001132.pre_damage_lp - current_lp, REASON_EFFECT)
+        end
     end
-
 end
 
 function c511001132.filter2(c,tp)
