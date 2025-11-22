@@ -12,7 +12,6 @@ function s.initial_effect(c)
     e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_TOKEN)
     e1:SetType(EFFECT_TYPE_IGNITION) --  ignition 表示是自己的主要阶段发动
     e1:SetRange(LOCATION_SZONE) -- 魔法陷阱区域
-    e1:SetCountLimit(1) -- 1回合1次
     e1:SetTarget(s.tktg)
     e1:SetOperation(s.tkop)
     c:RegisterEffect(e1)

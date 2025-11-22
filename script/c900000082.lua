@@ -1,4 +1,4 @@
---万物创始龙
+--混沌创世龙
 function c900000082.initial_effect(c)
 	--special summon
 	local e0=Effect.CreateEffect(c)
@@ -15,7 +15,6 @@ function c900000082.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCountLimit(1)
-	e1:SetCost(c900000082.spcost)
 	e1:SetTarget(c900000082.sptg)
 	e1:SetOperation(c900000082.spop)
 	c:RegisterEffect(e1)
@@ -38,13 +37,12 @@ function c900000082.initial_effect(c)
 	e3:SetValue(ATTRIBUTE_DARK)
 	c:RegisterEffect(e3)
 end
-
-function c900000082.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsReleasable() end
-	Duel.Release(e:GetHandler(),REASON_COST)
+---------------------------------------------------------------
+function c900000082.spcon(e,c)
+	if c==nil then return true end
+	return Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
 end
 
----------------------------------------------------------------
 function c900000082.filter(c,e,tp)
 	return c:IsType(TYPE_MONSTER) and c:IsCanBeSpecialSummoned(e,0,tp,true,true)
 end
@@ -53,13 +51,6 @@ function c900000082.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 		and Duel.IsExistingMatchingCard(c900000082.filter,tp,LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE+LOCATION_REMOVED+LOCATION_EXTRA,0,1,nil,e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE+LOCATION_REMOVED+LOCATION_EXTRA)
 end
-
-
-function c900000082.spcon(e,c)
-	if c==nil then return true end
-	return Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
-end
-
 function c900000082.spop(e,tp,eg,ep,ev,re,r,rp)
     local c=e:GetHandler()
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
@@ -69,10 +60,20 @@ function c900000082.spop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SpecialSummon(g,0,tp,tp,true,true,POS_FACEUP)
 
 		local tc=g:GetFirst()  
-		if tc:IsType(TYPE_XYZ) and not tc:IsType(TYPE_FUSION) then
+		if tc:IsType(TYPE_XYZ) and not tc:IsCode(77239001) then
 			local c=e:GetHandler()
 			c:CancelToGrave()
 			Duel.Overlay(tc,Group.FromCards(c))
+		else
+			local e1=Effect.CreateEffect(c)
+			e1:SetCategory(CATEGORY_TOHAND)
+			e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
+			e1:SetCode(EVENT_PHASE+PHASE_END)
+			e1:SetRange(LOCATION_MZONE)
+			e1:SetCountLimit(1)		
+			e1:SetTarget(c900000082.rettg)
+			e1:SetOperation(c900000082.retop)
+			c:RegisterEffect(e1)
 		end	
 	end
 end
