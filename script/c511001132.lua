@@ -50,9 +50,7 @@ function c511001132.spop(e,tp,eg,ep,ev,re,r,rp)
         local fid=e:GetHandler():GetFieldID()
         local tc=g:GetFirst()
         while tc do
-        Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP)
-
-        Duel.SpecialSummonComplete()
+        Duel.MoveToField(tc, tp, tp, LOCATION_MZONE, POS_FACEUP, true)
         tc=g:GetNext()
         end
     end

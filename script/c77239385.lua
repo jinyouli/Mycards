@@ -61,6 +61,7 @@ function c77239385.target(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c77239385.activate(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLP(tp)<=1000 then
+	end
     local g=Duel.GetMatchingGroup(c77239385.tdfilter,tp,LOCATION_HAND+LOCATION_ONFIELD+LOCATION_GRAVE,0,nil)
     Duel.SendtoDeck(g,nil,2,REASON_EFFECT)
     Duel.BreakEffect()
@@ -69,7 +70,6 @@ function c77239385.activate(e,tp,eg,ep,ev,re,r,rp)
     Duel.BreakEffect()
     e:GetHandler():CancelToGrave()
     Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_EFFECT)
-	end
 end
 
 function c77239385.efilter9(e,te)
