@@ -38,6 +38,7 @@ function c513000124.initial_effect(c)
 	e4:SetCode(EFFECT_NO_EFFECT_DAMAGE)
 	c:RegisterEffect(e4)
 
+
 	local e5=Effect.CreateEffect(c)
 	e5:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
 	e5:SetCode(EVENT_LEAVE_FIELD)
@@ -92,9 +93,7 @@ end
 
 function c513000124.damval2(e,re,val,r,rp,rc)
 	if Duel.GetLP(0)<=val then
-		-- local ct=math.floor(val/500)
-		-- e:GetHandler():AddCounter(0x1097,ct)
-		if val>1000 then
+		if val>=1000 then
 			e:GetHandler():AddCounter(0x1097,1)
 		end
 
@@ -132,10 +131,7 @@ function c513000124.ctcon(e,tp,eg,ep,ev,re,r,rp)
 	return ep==tp
 end
 function c513000124.ctop(e,tp,eg,ep,ev,re,r,rp)
-	-- local ct=math.floor(ev/500)
-	if ev>1000 then
-		e:GetHandler():AddCounter(0x1097,1)
-	end
+	Duel.ChangeBattleDamage(tp, 0) -- 将战斗伤害改为0
 end
 function c513000124.sdcon(e)
 	return e:GetHandler():GetCounter(0x1097)>=3
