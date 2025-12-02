@@ -1,12 +1,15 @@
 --naturia bamboo shoot
 function c900000081.initial_effect(c)
-	--special summon
+	--xyz summon
+	aux.AddXyzProcedure(c,c900000081.mfilter,5,2,c900000081.ovfilter,aux.Stringid(77239255,3),3,c900000081.xyzop)
+	c:EnableReviveLimit()
+	--atk
 	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetCode(EFFECT_SPSUMMON_PROC)
-	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
-	e1:SetRange(LOCATION_HAND)
-	e1:SetCondition(c900000081.spcon)
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetCode(EFFECT_UPDATE_ATTACK)
+	e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e1:SetRange(LOCATION_MZONE)
+	e1:SetValue(c900000081.atkval)
 	c:RegisterEffect(e1)
 
 	--不会被战斗破坏
@@ -35,6 +38,20 @@ function c900000081.initial_effect(c)
 	e4:SetTargetRange(0,1)
 	e4:SetValue(c900000081.acmonsterlimit)
 	c:RegisterEffect(e4)
+end
+
+function c900000081.mfilter(c)
+	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsRace(RACE_PLANT)
+end
+function c900000081.ovfilter(c)
+	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and not c:IsCode(900000081)
+end
+function c900000081.xyzop(e,tp,chk)
+	if chk==0 then return Duel.GetFlagEffect(tp,900000081)==0 end
+	Duel.RegisterFlagEffect(tp,900000081,RESET_PHASE+PHASE_END,EFFECT_FLAG_OATH,1)
+end
+function c900000081.atkval(e,c)
+	return c:GetOverlayCount()*200
 end
 
 function c900000081.spcon(e,c)
