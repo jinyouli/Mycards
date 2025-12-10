@@ -1,74 +1,79 @@
--- 海市蜃楼的支配者
+--Mirage Ruler
 function c511001132.initial_effect(c)
-    -- 激活后作为永续陷阱在场上存在
-    local e1 = Effect.CreateEffect(c)
-    e1:SetType(EFFECT_TYPE_ACTIVATE)
-    e1:SetCode(EVENT_FREE_CHAIN)
-    c:RegisterEffect(e1)
-    
-    --destroy spsummon
-    local e2=Effect.CreateEffect(c)
-    e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
-    e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
-    e2:SetCode(EVENT_DESTROYED)
-    e2:SetRange(LOCATION_SZONE)
-    e2:SetCondition(c511001132.spcon1)
-    e2:SetOperation(c511001132.spop)
-    c:RegisterEffect(e2)
+	--Activate
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_ACTIVATE)
+	e1:SetCode(EVENT_ATTACK_ANNOUNCE)
+	e1:SetCondition(c511001132.condition)
+	c:RegisterEffect(e1)
 
-    --destroy
-	local e3=Effect.CreateEffect(c)
-	e3:SetCategory(CATEGORY_DESTROY)
-	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e3:SetCode(EVENT_PHASE+PHASE_BATTLE_START)
-	e3:SetRange(LOCATION_SZONE)
-	e3:SetCountLimit(1)
-	e3:SetOperation(c511001132.daop)
-	c:RegisterEffect(e3)
-
-    c511001132.pre_damage_lp = 0
+   	--Special Summon destroyed monsters
+	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(27769400,0))
+	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e2:SetType(EFFECT_TYPE_QUICK_O)
+	e2:SetCode(EVENT_FREE_CHAIN)
+	e2:SetHintTiming(0,TIMING_BATTLE_END)
+	e2:SetRange(LOCATION_SZONE)
+	e2:SetCondition(c511001132.retcon)
+	e2:SetCost(c511001132.retcost)
+	e2:SetTarget(c511001132.rettg)
+	e2:SetOperation(c511001132.retop)
+	c:RegisterEffect(e2)
+	if not c511001132.global_check then
+		c511001132.global_check=true
+		c511001132[0]=0
+		c511001132[1]=0
+		local ge1=Effect.GlobalEffect()
+		ge1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		ge1:SetCode(EVENT_PHASE_START+PHASE_BATTLE_START)
+		ge1:SetCountLimit(1)
+		ge1:SetOperation(c511001132.startop)
+		Duel.RegisterEffect(ge1,0)
+		local ge4=Effect.GlobalEffect()
+		ge4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		ge4:SetCode(EVENT_DESTROYED)
+		ge4:SetOperation(c511001132.checkop)
+		Duel.RegisterEffect(ge4,0)
+	end
 end
-
-function c511001132.daop(e,tp,eg,ep,ev,re,r,rp)
-    c511001132.pre_damage_lp = Duel.GetLP(p)
+function c511001132.condition(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetAttacker():IsControler(1-tp)
 end
-
-function c511001132.filter1(c,e,tp)
-    return c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+function c511001132.startop(e,tp,eg,ep,ev,re,r,rp)
+	c511001132[0]=Duel.GetLP(0)
+	c511001132[1]=Duel.GetLP(1)
 end
-function c511001132.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-    if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 
-        and Duel.IsExistingMatchingCard(c511001132.filter1,tp,LOCATION_GRAVE,0,1,nil,e,tp) end
-    Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,Duel.GetLocationCount(tp,LOCATION_MZONE),tp,LOCATION_GRAVE)
+function c511001132.checkop(e,tp,eg,ep,ev,re,r,rp)
+	eg:GetFirst():RegisterFlagEffect(511001132+eg:GetFirst():GetPreviousControler(),RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_BATTLE,0,1)
 end
-function c511001132.spop(e,tp,eg,ep,ev,re,r,rp)
-    local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
-    if ft<=0 then return end
-    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-    local g=Duel.SelectMatchingCard(tp,c511001132.filter1,tp,LOCATION_GRAVE,0,ft,ft,nil,e,tp)
-    if g:GetCount()>0 then
-        local fid=e:GetHandler():GetFieldID()
-        local tc=g:GetFirst()
-        while tc do
-        Duel.MoveToField(tc, tp, tp, LOCATION_MZONE, POS_FACEUP, true)
-        tc=g:GetNext()
-        end
-    end
-
-    local ph=Duel.GetCurrentPhase()
-    if ph>=PHASE_BATTLE_START and ph<=PHASE_BATTLE then
-        local current_lp = Duel.GetLP(p)
-        if current_lp < c511001132.pre_damage_lp then
-            Duel.Recover(p, c511001132.pre_damage_lp - current_lp, REASON_EFFECT)
-        end
-    end
+function c511001132.retcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetCurrentPhase()>=PHASE_BATTLE_START and Duel.GetCurrentPhase()<=PHASE_BATTLE
 end
-
-function c511001132.filter2(c,tp)
-    return c:IsPreviousLocation(LOCATION_ONFIELD) and c:IsReason(REASON_DESTROY)
-    and c:GetControler()==tp and c:IsLocation(LOCATION_GRAVE)
-    and c:IsType(TYPE_MONSTER)
+function c511001132.retcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return e:GetHandler():IsAbleToGraveAsCost() end
+	Duel.SendtoGrave(e:GetHandler(),REASON_COST)
 end
-function c511001132.spcon1(e,tp,eg,ep,ev,re,r,rp)
-    return eg:IsExists(c511001132.filter2,1,nil,tp)
+function c511001132.filter(c)
+	return c:IsPreviousLocation(LOCATION_MZONE) and c:GetFlagEffect(511001132+c:GetPreviousControler())>0
+end
+function c511001132.rettg(e,tp,eg,ep,ev,re,r,rp,chk)
+	local g=Duel.GetMatchingGroup(c511001132.filter,tp,LOCATION_GRAVE+LOCATION_HAND+LOCATION_REMOVED+LOCATION_EXTRA,LOCATION_GRAVE+LOCATION_HAND+LOCATION_REMOVED+LOCATION_EXTRA,nil)
+	if chk==0 then return g:GetCount()>0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>=g:GetCount() and c511001132[tp]>=1000 end
+	local sg=g:Filter(Card.IsLocation,nil,LOCATION_GRAVE)
+	Duel.SetOperationInfo(0,CATEGORY_LEAVE_GRAVE,sg,sg:GetCount(),0,0)
+end
+function c511001132.retop(e,tp,eg,ep,ev,re,r,rp)
+	local g=Duel.GetMatchingGroup(c511001132.filter,tp,LOCATION_GRAVE+LOCATION_HAND+LOCATION_REMOVED+LOCATION_EXTRA,LOCATION_GRAVE+LOCATION_HAND+LOCATION_REMOVED+LOCATION_EXTRA,nil)
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	if g:GetCount()<=0 or ft<g:GetCount() then return end
+	for tc in aux.Next(g) do
+		Duel.MoveToField(tc,tp,tp,LOCATION_MZONE,tc:GetPreviousPosition(),true)
+		tc:SetStatus(STATUS_FORM_CHANGED,true)
+	end
+	if Duel.GetLP(tp)~=c511001132[tp] then
+		Duel.SetLP(tp,c511001132[tp],REASON_EFFECT)
+		Duel.BreakEffect()
+		-- Duel.PayLPCost(tp,1000)
+	end
 end
