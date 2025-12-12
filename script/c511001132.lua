@@ -8,18 +8,29 @@ function c511001132.initial_effect(c)
 	c:RegisterEffect(e1)
 
    	--Special Summon destroyed monsters
-	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(27769400,0))
-	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e2:SetType(EFFECT_TYPE_QUICK_O)
-	e2:SetCode(EVENT_FREE_CHAIN)
-	e2:SetHintTiming(0,TIMING_BATTLE_END)
-	e2:SetRange(LOCATION_SZONE)
-	e2:SetCondition(c511001132.retcon)
-	e2:SetCost(c511001132.retcost)
-	e2:SetTarget(c511001132.rettg)
-	e2:SetOperation(c511001132.retop)
-	c:RegisterEffect(e2)
+	-- local e2=Effect.CreateEffect(c)
+	-- e2:SetDescription(aux.Stringid(27769400,0))
+	-- e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	-- e2:SetType(EFFECT_TYPE_QUICK_O)
+	-- e2:SetCode(EVENT_FREE_CHAIN)
+	-- e2:SetHintTiming(0,TIMING_BATTLE_END)
+	-- e2:SetRange(LOCATION_SZONE)
+	-- e2:SetCondition(c511001132.retcon)
+	-- e2:SetCost(c511001132.retcost)
+	-- e2:SetTarget(c511001132.rettg)
+	-- e2:SetOperation(c511001132.retop)
+	-- c:RegisterEffect(e2)
+
+	--destroy spsummon
+    local e2=Effect.CreateEffect(c)
+    e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
+    e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
+    e2:SetCode(EVENT_DESTROYED)
+    e2:SetRange(LOCATION_SZONE)
+    e2:SetCondition(c511001132.retcon)
+    e2:SetOperation(c511001132.retop)
+    c:RegisterEffect(e2)
+
 	if not c511001132.global_check then
 		c511001132.global_check=true
 		c511001132[0]=0
