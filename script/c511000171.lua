@@ -30,7 +30,7 @@ end
 function c511000171.activate(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
 	local g1=Duel.GetMatchingGroup(c511000171.filter,tp,LOCATION_DECK,0,nil)
-	if g1:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(511000171,1)) then
+	if g1:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(24140059,0)) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 		local sg=g1:Select(tp,1,1,nil)
 		Duel.SendtoHand(sg,nil,REASON_EFFECT)
@@ -128,8 +128,6 @@ function c511000171.actg(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 	if c:IsLocation(LOCATION_ONFIELD) and c:IsFacedown() then
 		Duel.ChangePosition(c,POS_FACEUP)
-	else
-		Duel.MoveToField(c,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
 	end
 	c:CreateEffectRelation(te)
 
@@ -146,19 +144,6 @@ function c511000171.acop(e,tp,eg,ep,ev,re,r,rp)
 		if c:IsType(TYPE_SPELL+TYPE_EQUIP) then
 			local target=Duel.GetFirstTarget()
 			Duel.Equip(tp,c,target)
-		end
-
-		if c:IsType(TYPE_SPELL+TYPE_FIELD) then
-			local tc=c
-			local te=tc:GetActivateEffect()
-			te:UseCountLimit(tp,1,true)
-			local tep=tc:GetControler()
-			local cost=te:GetCost()
-			if cost then cost(te,tep,eg,ep,ev,re,r,rp,1) end
-			Duel.RaiseEvent(tc,4179255,te,0,tp,tp,Duel.GetCurrentChain())
-		end
-
-		if bit.band(tpe,TYPE_CONTINUOUS+TYPE_FIELD)==0 then
 			c:CancelToGrave(true)
 		end
 		c:ReleaseEffectRelation(te)
