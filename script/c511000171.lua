@@ -122,8 +122,6 @@ function c511000171.actg(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:SetCategory(te:GetCategory())
 	e:SetProperty(te:GetProperty())
 	if bit.band(tpe,TYPE_FIELD)~=0 then
-		local of=Duel.GetFieldCard(1-tp,LOCATION_SZONE,5)
-		if of and Duel.Destroy(of,REASON_RULE)==0 and Duel.SendtoGrave(of,REASON_RULE)==0 then Duel.SendtoGrave(c,REASON_RULE) end
 		Duel.MoveToField(c,tp,tp,LOCATION_FZONE,POS_FACEUP,true)
 	end
 	if c:IsLocation(LOCATION_ONFIELD) and c:IsFacedown() then
