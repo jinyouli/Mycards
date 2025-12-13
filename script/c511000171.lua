@@ -141,10 +141,12 @@ function c511000171.acop(e,tp,eg,ep,ev,re,r,rp)
 	local op=te:GetOperation()
 	local tpe=c:GetType()
 	if op then
-		if c:IsType(TYPE_SPELL+TYPE_EQUIP) then
+		if bit.band(tpe,TYPE_EQUIP)~=0 then
 			local target=Duel.GetFirstTarget()
 			Duel.Equip(tp,c,target)
 			c:CancelToGrave(true)
+		else
+			c:CancelToGrave(false)
 		end
 		c:ReleaseEffectRelation(te)
 		if op then op(te,tp,eg,ep,ev,re,r,rp) end

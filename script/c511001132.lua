@@ -7,20 +7,6 @@ function c511001132.initial_effect(c)
 	e1:SetCondition(c511001132.condition)
 	c:RegisterEffect(e1)
 
-   	--Special Summon destroyed monsters
-	-- local e2=Effect.CreateEffect(c)
-	-- e2:SetDescription(aux.Stringid(27769400,0))
-	-- e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	-- e2:SetType(EFFECT_TYPE_QUICK_O)
-	-- e2:SetCode(EVENT_FREE_CHAIN)
-	-- e2:SetHintTiming(0,TIMING_BATTLE_END)
-	-- e2:SetRange(LOCATION_SZONE)
-	-- e2:SetCondition(c511001132.retcon)
-	-- e2:SetCost(c511001132.retcost)
-	-- e2:SetTarget(c511001132.rettg)
-	-- e2:SetOperation(c511001132.retop)
-	-- c:RegisterEffect(e2)
-
 	--destroy spsummon
     local e2=Effect.CreateEffect(c)
     e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -56,14 +42,12 @@ function c511001132.startop(e,tp,eg,ep,ev,re,r,rp)
 	c511001132[1]=Duel.GetLP(1)
 end
 function c511001132.checkop(e,tp,eg,ep,ev,re,r,rp)
-	eg:GetFirst():RegisterFlagEffect(511001132+eg:GetFirst():GetPreviousControler(),RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_BATTLE,0,1)
+	if eg:GetFirst():IsPreviousControler(tp) then
+		eg:GetFirst():RegisterFlagEffect(511001132+eg:GetFirst():GetPreviousControler(),RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_BATTLE,0,1)
+	end
 end
 function c511001132.retcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetCurrentPhase()>=PHASE_BATTLE_START and Duel.GetCurrentPhase()<=PHASE_BATTLE
-end
-function c511001132.retcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsAbleToGraveAsCost() end
-	Duel.SendtoGrave(e:GetHandler(),REASON_COST)
+	return Duel.GetCurrentPhase()>=PHASE_BATTLE_START and Duel.GetCurrentPhase()<=PHASE_BATTLE and  eg:GetFirst():IsPreviousControler(tp)
 end
 function c511001132.filter(c)
 	return c:IsPreviousLocation(LOCATION_MZONE) and c:GetFlagEffect(511001132+c:GetPreviousControler())>0
@@ -85,6 +69,5 @@ function c511001132.retop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLP(tp)~=c511001132[tp] then
 		Duel.SetLP(tp,c511001132[tp],REASON_EFFECT)
 		Duel.BreakEffect()
-		-- Duel.PayLPCost(tp,1000)
 	end
 end
