@@ -1,6 +1,5 @@
 --邪神アバター
 function c513000138.initial_effect(c)
-
 	--summon with 3 tribute
 	local e1=Effect.CreateEffect(c)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
