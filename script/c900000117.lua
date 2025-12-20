@@ -33,14 +33,15 @@ function c900000117.initial_effect(c)
     e13:SetOperation(c900000117.disop)
     c:RegisterEffect(e13)
 
-    local e1=Effect.CreateEffect(c)
-    e1:SetCategory(CATEGORY_DRAW)
-    e1:SetType(EFFECT_TYPE_ACTIVATE)
-    e1:SetCode(EVENT_FREE_CHAIN)
+    --Activate
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_ACTIVATE)
+	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetHintTiming(0,TIMING_END_PHASE)
     e1:SetCost(c900000117.cost)
-    e1:SetTarget(c900000117.target)
-    e1:SetOperation(c900000117.operation3)
-    c:RegisterEffect(e1)
+	e1:SetTarget(c900000117.target)
+	e1:SetOperation(c900000117.activate)
+	c:RegisterEffect(e1)
 end
 ----------------------------------------------------------------------
 function c900000117.efilter9(e,te)
@@ -65,28 +66,23 @@ end
 
 -- 目标：我方抽1张卡
 function c900000117.target(e,tp,eg,ep,ev,re,r,rp,chk)
-    if chk==0 then return Duel.IsPlayerCanDraw(tp,1) end
-    Duel.SetTargetPlayer(tp)
-    Duel.SetTargetParam(1)
-    Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
+    if chk==0 then return not Duel.IsPlayerAffectedByEffect(1-tp,EFFECT_SKIP_DP) end
 end
 
-function c900000117.operation3(e,tp,eg,ep,ev,re,r,rp)
+function c900000117.activate(e,tp,eg,ep,ev,re,r,rp)
     -- 跳过对方下一个抽卡阶段
     local e1=Effect.CreateEffect(e:GetHandler())
-    e1:SetType(EFFECT_TYPE_FIELD)
-    e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-    e1:SetCode(EFFECT_SKIP_DP)
-    e1:SetTargetRange(0,1)
-    e1:SetLabel(Duel.GetTurnCount()+1)
-    e1:SetCondition(c900000117.skipcon)
-    e1:SetReset(RESET_PHASE+PHASE_END+RESET_OPPO_TURN,1)
-    Duel.RegisterEffect(e1,tp)
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e1:SetTargetRange(0,1)
+	e1:SetCode(EFFECT_SKIP_DP)
+	if Duel.GetTurnPlayer()==1-tp and Duel.GetCurrentPhase()==PHASE_DRAW then
+		e1:SetReset(RESET_PHASE+PHASE_DRAW+RESET_OPPO_TURN,2)
+	else
+		e1:SetReset(RESET_PHASE+PHASE_DRAW+RESET_OPPO_TURN)
+	end
+	Duel.RegisterEffect(e1,tp)
     
     -- 我方抽卡
     Duel.Draw(tp,1,REASON_EFFECT)
-end
-
-function c900000117.skipcon(e)
-    return Duel.GetTurnCount()~=e:GetLabel()
 end
