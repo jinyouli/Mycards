@@ -38,21 +38,23 @@ function c900000116.initial_effect(c)
     e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
     e1:SetType(EFFECT_TYPE_QUICK_O)
     e1:SetCode(EVENT_FREE_CHAIN)
+    e1:SetCountLimit(1)
     e1:SetRange(LOCATION_GRAVE)
     e1:SetCost(c900000116.spcost)
     e1:SetTarget(c900000116.sptg)
     e1:SetOperation(c900000116.spop)
     c:RegisterEffect(e1)
     
-    -- 战斗破坏夺取怪兽效果
-    local e2 = Effect.CreateEffect(c)
-    e2:SetCategory(CATEGORY_CONTROL)
-    e2:SetType(EFFECT_TYPE_SINGLE + EFFECT_TYPE_TRIGGER_O)
-    e2:SetCode(EVENT_BATTLE_DESTROYING)
-    e2:SetCondition(c900000116.btcon)
-    e2:SetTarget(c900000116.bttg)
-    e2:SetOperation(c900000116.btop)
-    c:RegisterEffect(e2)
+    -- 战斗破坏夺取怪兽
+	local e2=Effect.CreateEffect(c)
+	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e2:SetCode(EVENT_BATTLE_DESTROYING)
+	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e2:SetCondition(aux.bdogcon)
+	e2:SetTarget(c900000116.sptg2)
+	e2:SetOperation(c900000116.spop2)
+	c:RegisterEffect(e2)
+
 end
 ----------------------------------------------------------------------
 function c900000116.efilter9(e,te)
@@ -100,21 +102,16 @@ function c900000116.spop(e, tp, eg, ep, ev, re, r, rp)
     end
 end
 
--- 战斗破坏条件检查
-function c900000116.btcon(e, tp, eg, ep, ev, re, r, rp)
-    return e:GetHandler():IsFaceup() and e:GetHandler():IsRelateToBattle()
+function c900000116.sptg2(e,tp,eg,ep,ev,re,r,rp,chk)
+	local bc=e:GetHandler():GetBattleTarget()
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and bc:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP) end
+	Duel.SetTargetCard(bc)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,bc,1,0,0)
 end
-
--- 战斗破坏目标设置
-function c900000116.bttg(e, tp, eg, ep, ev, re, r, rp, chk)
-    if chk == 0 then return true end
-    Duel.SetOperationInfo(0, CATEGORY_CONTROL, e:GetHandler():GetBattleTarget(), 1, 0, 0)
-end
-
--- 战斗破坏操作处理：夺取被破坏的怪兽
-function c900000116.btop(e, tp, eg, ep, ev, re, r, rp)
-    local tc = e:GetHandler():GetBattleTarget()
-    if tc and tc:IsLocation(LOCATION_GRAVE) and tc:IsReason(REASON_BATTLE) then
-        Duel.GetControl(tc, tp, PHASE_END, 1)
-    end
+function c900000116.spop2(e,tp,eg,ep,ev,re,r,rp)
+	local tc=Duel.GetFirstTarget()
+	if tc:IsRelateToEffect(e) then
+		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
+	end
 end
