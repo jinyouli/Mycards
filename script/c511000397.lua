@@ -20,7 +20,8 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 	local e4=e2:Clone()
 	e4:SetCode(EFFECT_IMMUNE_EFFECT)
-	e4:SetValue(s.efilter)
+--	e4:SetValue(s.efilter)
+	e4:SetValue(s.efval)
 	c:RegisterEffect(e4)
 end
 function s.infilter(e,c)
@@ -28,4 +29,13 @@ function s.infilter(e,c)
 end
 function s.efilter(e,te)
 	return te:GetOwner()~=e:GetOwner()
+end
+
+-- 免疫效果判断：只免疫对方的效果
+function s.efval(e, te)
+    local tc = te:GetHandler()
+    local tp = e:GetHandlerPlayer()
+    return te:IsActiveType(TYPE_MONSTER) and tc:GetControler() ~= tp or
+           te:IsActiveType(TYPE_SPELL) and tc:GetControler() ~= tp or
+           te:IsActiveType(TYPE_TRAP) and tc:GetControler() ~= tp
 end
