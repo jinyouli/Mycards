@@ -43,7 +43,7 @@ function c77239701.initial_effect(c)
     local e6=Effect.CreateEffect(c)
     e6:SetCategory(CATEGORY_REMOVE)
     e6:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
-    e6:SetCode(EVENT_SUMMON_SUCCESS)
+    e6:SetCode(EVENT_SPSUMMON_SUCCESS)
     e6:SetTarget(c77239701.target)
     e6:SetOperation(c77239701.activate)
     c:RegisterEffect(e6)		
@@ -63,17 +63,17 @@ function c77239701.disop2(e,tp,eg,ep,ev,re,r,rp)
     end
 end
 function c77239701.distg2(e,c)
-    return c:GetCardTargetCount()>0 and (re:GetHandler():IsSetCard(0xa50) or re:GetHandler():IsSetCard(0xa70))
+    return c:GetCardTargetCount()>0 and (e:GetHandler():IsSetCard(0xa50) or e:GetHandler():IsSetCard(0xa70))
         and c:GetCardTarget():IsContains(e:GetHandler())
 end
 ---------------------------------------------------------------------------------
 function c77239701.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,LOCATION_HAND+LOCATION_DECK+LOCATION_ONFIELD+LOCATION_GRAVE,LOCATION_HAND+LOCATION_DECK+LOCATION_ONFIELD+LOCATION_GRAVE,1,nil) end
-	local g=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,LOCATION_HAND+LOCATION_DECK+LOCATION_ONFIELD+LOCATION_GRAVE,LOCATION_HAND+LOCATION_DECK+LOCATION_ONFIELD+LOCATION_GRAVE,e:GetHandler())
+	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,LOCATION_HAND+LOCATION_ONFIELD+LOCATION_GRAVE,LOCATION_HAND+LOCATION_ONFIELD+LOCATION_GRAVE,1,nil) end
+	local g=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,LOCATION_HAND+LOCATION_ONFIELD+LOCATION_GRAVE,LOCATION_HAND+LOCATION_ONFIELD+LOCATION_GRAVE,e:GetHandler())
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,g:GetCount(),0,0)
 	Duel.SetChainLimit(aux.FALSE)
 end
 function c77239701.activate(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,LOCATION_HAND+LOCATION_DECK+LOCATION_ONFIELD+LOCATION_GRAVE,LOCATION_HAND+LOCATION_DECK+LOCATION_ONFIELD+LOCATION_GRAVE,e:GetHandler())
+	local g=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,LOCATION_HAND+LOCATION_ONFIELD+LOCATION_GRAVE,LOCATION_HAND+LOCATION_ONFIELD+LOCATION_GRAVE,e:GetHandler())
     Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
 end
