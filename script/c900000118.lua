@@ -46,9 +46,11 @@ function c900000118.initial_effect(c)
 	e5:SetDescription(aux.Stringid(123111,9))
 	e5:SetType(EFFECT_TYPE_ACTIVATE)
 	e5:SetCode(EVENT_FREE_CHAIN)
-	e5:SetTarget(c900000118.target5)
-	e5:SetOperation(c900000118.operation5)
+	e5:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e5:SetTarget(c900000118.target6)
+	e5:SetOperation(c900000118.operation6)
 	c:RegisterEffect(e5)
+	
 end
 
 function c900000118.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -170,52 +172,58 @@ function s.activate2(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function c900000118.filter5(c)
-	return c:GetType()==TYPE_SPELL
+	return c:IsType(TYPE_SPELL)
 end
-function c900000118.target5(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	
-	if chkc then
-		local te=e:GetLabelObject()
-		local tg=te:GetTarget()
-		return tg and tg(e,tp,eg,ep,ev,re,r,rp,0,chkc)
+
+function s.target6(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chk==0 then
+    	return Duel.IsExistingMatchingCard(c900000118.filter5,tp,LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE+LOCATION_REMOVED+LOCATION_EXTRA,0,1,nil,e,tp)
 	end
-	
-	Debug.Message("msg .0")
-	if chk==0 then return Duel.IsExistingTarget(c900000118.filter5,tp,LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil) end
-	Debug.Message("msg .2")
-	
-	e:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e:SetCategory(0)
 
-	
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
-	local g=Duel.SelectTarget(tp,c900000118.filter5,tp,LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,nil)
-
-	
-	local te=g:GetFirst():CheckActivateEffect(true,true,false)
-	Duel.ClearTargetCard()
-	e:SetProperty(te:GetProperty())
-	e:SetLabel(te:GetLabel())
-	e:SetLabelObject(te:GetLabelObject())
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE+LOCATION_REMOVED+LOCATION_EXTRA)
+end
+function s.operation6(e,tp,eg,ep,ev,re,r,rp)
+  
+  local g1=Duel.SelectMatchingCard(tp,c900000118.filter5,tp,LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,nil,e,tp)
+	if g1:GetCount()==0 then
+		return
+	end
+  
+	local tc=g1:GetFirst()
+	local tpe=tc:GetType()
+	local te=tc:GetActivateEffect()
 	local tg=te:GetTarget()
-
-	
-	if tg then tg(e,tp,eg,ep,ev,re,r,rp,1) end
-
-	
-	te:SetLabel(e:GetLabel())
-	te:SetLabelObject(e:GetLabelObject())
-	e:SetLabelObject(te)
-	Duel.ClearOperationInfo(0)
-end
-function c900000118.operation5(e,tp,eg,ep,ev,re,r,rp)
-	local te=e:GetLabelObject()
-	if te:GetHandler():IsRelateToEffect(e) then
-		e:SetLabel(te:GetLabel())
-		e:SetLabelObject(te:GetLabelObject())
-		local op=te:GetOperation()
-		if op then op(e,tp,eg,ep,ev,re,r,rp) end
-		te:SetLabel(e:GetLabel())
-		te:SetLabelObject(e:GetLabelObject())
+	local co=te:GetCost()
+	local op=te:GetOperation()
+	e:SetCategory(te:GetCategory())
+	e:SetProperty(te:GetProperty())
+	Duel.ClearTargetCard()
+	if (tpe&TYPE_EQUIP+TYPE_CONTINUOUS)~=0 or tc:IsHasEffect(EFFECT_REMAIN_FIELD) then
+		if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 then return end
+		Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
+	elseif (tpe&TYPE_FIELD)~=0 then
+		Duel.MoveToField(tc,tp,tp,LOCATION_FZONE,POS_FACEUP,true)
 	end
+	tc:CreateEffectRelation(te)
+	if co then co(te,tp,eg,ep,ev,re,r,rp,1) end
+	if tg then
+		if tc:IsSetCard(0x95) then
+			tg(e,tp,eg,ep,ev,re,r,rp,1)
+		else
+			tg(te,tp,eg,ep,ev,re,r,rp,1)
+		end
+	end
+	Duel.BreakEffect()
+
+	if (tpe&TYPE_EQUIP)~=0 then
+		local t1=Duel.GetFirstTarget()
+		if not Duel.Equip(tp,tc,t1) then return end
+	end
+	
+	if op then 
+		op(te,tp,eg,ep,ev,re,r,rp)
+	end
+	tc:ReleaseEffectRelation(te)
 end
+
+
