@@ -145,6 +145,8 @@ function c511000171.acop(e,tp,eg,ep,ev,re,r,rp)
 			local target=Duel.GetFirstTarget()
 			Duel.Equip(tp,c,target)
 			c:CancelToGrave(true)
+		elseif bit.band(tpe,TYPE_CONTINUOUS)~=0 then
+			c:CancelToGrave(true)
 		else
 			c:CancelToGrave(false)
 		end
